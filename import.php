@@ -80,21 +80,22 @@ if (isset($_POST["import"])) {
                  
                  
                  //descobrir o turno do nadadador
-                 if ($turno=='Manhã'){$id_turno='1';}
-                 if ($turno=='Tarde'){$id_turno='2';}
-                 if ($turno=='Manhã Tarde'){$id_turno='3';}
+                 if ($turno=='Manhã'){$id_manha='1';} else {$id_manha=0;}
+                 if ($turno=='Tarde'){$id_tarde='1';} else {$id_tarde=0;}
+                 if ($turno=='Manhã Tarde'){$id_manha=1; $id_tarde=1;}
                  //inserção dos campos na tb_disponibilidade
                  $codigo=$out[1];
                  foreach($result as $res){
                  $id_dia=$res['id_dia'];
                  }
 
-                 $query = "insert into tb_disponibilidade(preferencias,turno,id_nadador,id_dia) values(?,?,?,?)";
+                 $query = "insert into tb_disponibilidade(preferencias,Manhã,Tarde,id_nadador,id_dia) values(?,?,?,?,?)";
                  
-                 $paramType = "ssii";
+                 $paramType = "siiii";
                  $paramArray = array(
                  $preference,
-                 $turno,
+                 $id_manha,
+                 $id_tarde,
                  $codigo,
                  $id_dia
                  );
@@ -271,7 +272,8 @@ if (! empty($result)) {
         <thead>
             <tr>
                 <th>Id_nadador</th>
-                <th>turno</th>
+                <th>Manha</th>
+                <th>Tarde</th>
                 <th>id_dia</th>
                 <th>Preferências</th>
             
@@ -284,7 +286,8 @@ if (! empty($result)) {
         <tbody>
             <tr>
                 <td><?php  echo $row['id_nadador']; ?></td>
-                <td><?php  echo $row['turno']; ?></td>
+                <td><?php  echo $row['Manhã']; ?></td>
+                <td><?php  echo $row['Tarde']; ?></td>
                 <td><?php  echo $row['id_dia']; ?></td>
                 <td><?php  echo $row['preferencias']; ?></td>
 

@@ -178,11 +178,32 @@ if (isset($_POST["import"])) {
     <h2>Import Excel File into MySQL Database using PHP</h2>
 
     <div class="outer-container">
-        <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
+        <form action="" method="post" name="range" enctype="multipart/form-data">
             <div>
-                <label>Choose Excel File</label> <input type="file" name="file" id="file" accept=".xls,.xlsx">
-                <button type="submit" id="submit" name="import" class="btn-submit">Import</button>
-                <button onclick="resetFile()">Reset file</button>
+            <?php
+     $sqlSelect = "SELECT * FROM tb_dias";
+     $resultad = $db->select($sqlSelect);
+     echo"<select name='Dias' size='1' class='form-select form-select-sm'>";
+     echo"<option value='' disabled selected hidden> Dias </option>"; 
+                            foreach($resultad as $re){
+                                $dia1=$re['dia']; 
+                                $id1=$re['id_dia'];
+                                echo"<option value=$id1>$dia1</option>";     
+                                } 
+                                echo "</select>"; 
+                                echo"<select name='Dias' size='1' class='form-select form-select-sm'>";
+     echo"<option value='' disabled selected hidden> Dias </option>"; 
+                            foreach($resultad as $re){
+                                $dia2=$re['dia']; 
+                                $id2=$re['id_dia'];
+                                echo"<option value=$id2>$dia2</option>";     
+                                } 
+                                echo "</select>";
+
+                                echo "<input type='submit'>"
+
+?>
+                
             </div>
 
         </form>
@@ -198,9 +219,11 @@ if (isset($_POST["import"])) {
                 <th>Nome_praia</th>
                 <th>Turno_praia</th>
                 <?php
-                    
-                $sqlSelect = "SELECT * FROM tb_dias";
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                
+                $sqlSelect = "SELECT * FROM tb_dias where dia between $id1 and $id2";
                     $result = $db->select($sqlSelect);
+                    var_dump($result);
                     
                     if (! empty($result)) {
                         foreach ($result as $row) { 
@@ -212,7 +235,7 @@ if (isset($_POST["import"])) {
             </tr>
         </thead>
         <?php
-        $sqlSelect = "SELECT * FROM tb_praia,tb_disponibilidade";
+        $sqlSelect = "SELECT * FROM tb_praia";
         $resultado = $db->select($sqlSelect);
         
     foreach ($resultado as $res) { // ($row = mysqli_fetch_array($result))
@@ -223,7 +246,7 @@ if (isset($_POST["import"])) {
            
                  echo '<td>' .$res['nome_praia']. '</td>';
                  echo '<td>'  .$res['turno']. '</td>';
-                 echo '<td>'  .$res['id_nadador']. '</td>';
+
                 ?>
 
             </tr>
@@ -233,7 +256,16 @@ if (isset($_POST["import"])) {
         </tbody>
     </table>
     <?php
-
+     $sqlSelect = "SELECT dia FROM tb_dias";
+     $resultad = $db->select($sqlSelect);
+     echo"<select name='Dias' size='1' class='form-select form-select-sm'>";
+     echo"<option value='' disabled selected hidden> Dias </option>"; 
+                            foreach($resultad as $re){
+                                $dias=$re['dia']; 
+                                echo"<option value='$dias'>$dias</option>";     
+                                } 
+                                echo "</select>";  
+                            }
 ?>
     <script>
     function resetFile() {
