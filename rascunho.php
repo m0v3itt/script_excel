@@ -1,287 +1,177 @@
-<?php
-use Phppot\DataSource;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-
-require_once 'DataSource.php';
-$db = new DataSource();
-$conn = $db->getConnection();
-require_once ('./vendor/autoload.php');
-
-if (isset($_POST["import"])) {
-
-    $allowedFileType = [
-        'application/vnd.ms-excel',
-        'text/xls',
-        'text/xlsx',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    ];
-
-    if (in_array($_FILES["file"]["type"], $allowedFileType)) {
-
-        $targetPath = 'uploads/' . $_FILES['file']['name'];
-        move_uploaded_file($_FILES['file']['tmp_name'], $targetPath);
-
-        $Reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-
-        $spreadSheet = $Reader->load($targetPath);
-        $excelSheet = $spreadSheet->getActiveSheet();
-        $spreadSheetAry = $excelSheet->toArray();
-        $sheetCount = count($spreadSheetAry);
-
-        for ($i = 2; $i <= $sheetCount; $i ++) {
-            $dias = "";
-            if (isset($spreadSheetAry[0][$i])) {
-                $dias = mysqli_real_escape_string($conn, $spreadSheetAry[0][$i]);
-            }
-        
-            
-
-            if (! empty($dias)) {
-                $query = "insert into tb_dias(dia) values(?)";
-                $paramType = "s";
-                $paramArray = array(
-                    $dias
-                );
-                $insertId = $db->insert($query, $paramType, $paramArray);
-                if (! empty($insertId)) {
-                    $type = "success";
-                    $message = "Excel Data Imported into the Database";
-                } else {
-                    $type = "error";
-                    $message = "Problem in Importing Excel Data!!!!!!!!!";
-                }
-            }
-        }
-    } else {
-        $type = "error";
-        $message = "Invalid File Type. Upload Excel File.";
-    }
-
-    for ($i = 1; $i <= $sheetCount; $i ++) {
-        $name = "";
-        if (isset($spreadSheetAry[$i][0])) {
-            $name = mysqli_real_escape_string($conn, $spreadSheetAry[$i][0]);
-            preg_match('/\(([A-Za-z0-9 ]+?)\)/', $name, $out);
-            $codigo=$out[1];
-     
-        }
-        $preferencias = "";
-        if (isset($spreadSheetAry[$i][1])) {
-            $preferencias = mysqli_real_escape_string($conn, $spreadSheetAry[$i][1]);
-        }
-        
-
-        if (! empty($name) || ! empty($preferencias)) {
-            $query = "insert into tb_nadadores(nome,preferencias,id_nadador) values(?,?,?)";
-            $paramType = "ssi";
-            $paramArray = array(
-                $name,
-                $preferencias,
-                $codigo
-            );
-            $insertId = $db->insert($query, $paramType, $paramArray);
-            if (! empty($insertId)) {
-                $type = "success";
-                $message = "Excel Data Imported into the Database";
-            } else {
-                $type = "error";
-                $message = "Problem in Importing Excel Data.............";
-            }
-        }
-    }
-    
-    
-}
-
-
-
-
-        
-
+<?php 
+include_once("db_connect.php");
 
 ?>
 
 <!DOCTYPE html>
 <html>
-
 <head>
-    <style>
-    body {
-        font-family: Arial;
-        width: 550px;
-    }
-
-    .outer-container {
-        background: #F0F0F0;
-        border: #e0dfdf 1px solid;
-        padding: 40px 20px;
-        border-radius: 2px;
-    }
-
-    .btn-submit {
-        background: #333;
-        border: #1d1d1d 1px solid;
-        border-radius: 2px;
-        color: #f0f0f0;
-        cursor: pointer;
-        padding: 5px 20px;
-        font-size: 0.9em;
-    }
-
-    .tutorial-table {
-        margin-top: 40px;
-        font-size: 0.8em;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    .tutorial-table th {
-        background: #f0f0f0;
-        border-bottom: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    .tutorial-table td {
-        background: #FFF;
-        border-bottom: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    #response {
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 2px;
-        display: none;
-    }
-
-    .success {
-        background: #c7efd9;
-        border: #bbe2cd 1px solid;
-    }
-
-    .error {
-        background: #fbcfcf;
-        border: #f3c6c7 1px solid;
-    }
-
-    div#response.display-block {
-        display: block;
-    }
-
-</style>
-
+<title>Script</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!-- jQuery -->
+<script type="text/javascript" src="dist/jquery.tabledit.js"></script>
 </head>
+<body class="">
 
-<body>
-    <h2>Import Excel File into MySQL Database using PHP</h2>
+	<div class="container" style="min-height:500px;">
+	<div class=''>
+	</div>
 
-    <div class="outer-container">
-        <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
-            <div>
-                <label>Choose Excel File</label> <input type="file" name="file" id="file" accept=".xls,.xlsx">
-                <button type="submit" id="submit" name="import" class="btn-submit">Import</button>
-                <button onclick="resetFile()">Reset file</button>
-            </div>
+<?php 
 
-        </form>
 
-    </div>
-    <div id="response" class="<?php if(!empty($type)) { echo $type . " display-block"; } ?>">
-        <?php if(!empty($message)) { echo $message; } ?></div>
 
-    <table class='tutorial-table'>
-        <thead>
-            <tr>
-                <?php
-                    
-                $sqlSelect = " SELECT * from tb_dias";
+// Selecionar os dias que vão aparecer na tabela
 
-                    $result = $db->select($sqlSelect);
-                    
-                    if (! empty($result)) {
-                        foreach ($result as $row) { 
-                            echo "<th>".$row['dia']."</th>";
-                           
-                        }
-                    ?>
-            
 
-            </tr>
-        </thead>
-        <?php
-        $sqlSelect ="SELECT tb_disponibilidade.id_nadador,
-        tb_dias.id_dia,
-        tb_nadadores.nome,
-        tb_dias.dia,
-        tb_praia.nome_praia,
-        tb_praia.turno 
-        FROM ((tb_praia,tb_disponibilidade
-        INNER JOIN tb_dias ON tb_disponibilidade.id_dia = tb_dias.id_dia) 
-        INNER JOIN tb_nadadores ON tb_disponibilidade.id_nadador = tb_nadadores.id_nadador) 
-        where tb_praia.turno='Manhã' and tb_disponibilidade.Manhã=1 
-        or tb_praia.turno='Tarde' and tb_disponibilidade.Tarde=1;";
-
-        
-        
-            
-            $resultado = $db->select($sqlSelect);
-            
-            
-            foreach ($resultado as $res) {
-                
-                $id_nadador=$res['id_nadador'];
-                $id=$res['id_dia'];
-                var_dump($id);
-                
-            }
-            foreach($id==$row['id_dia'] as $index){
-                echo '<td>' .$id_nadador. '</td>';
-            }
-
-    }
-      /*"SELECT tb_disponibilidade.id_nadador,
-      tb_dias.id_dia,
-      tb_nadadores.nome,
-      tb_dias.dia,
-      tb_praia.nome_praia,
-      tb_praia.turno 
-      FROM ((tb_praia,tb_disponibilidade
-      INNER JOIN tb_dias ON tb_disponibilidade.id_dia = tb_dias.id_dia) 
-      INNER JOIN tb_nadadores ON tb_disponibilidade.id_nadador = tb_nadadores.id_nadador) 
-      where tb_praia.turno='Manhã' and tb_disponibilidade.Manhã=1 
-      or tb_praia.turno='Tarde' and tb_disponibilidade.Tarde=1;";*/
-        
-    // foreach ($resultado as $res) {
-    //     var_dump($res['id_nadador']);
-    //     var_dump($res['id_dia']) ; 
-    //     // ($row = mysqli_fetch_array($result))
-        ?>
-        <tbody>
-            <tr><?php 
-          
-           
-                 echo '<td>' .$res['id_nadador']. '</td>';
-                
-                ?>
-
-            </tr>
-            <?php
-    // }
-    ?>
-        </tbody>
-    </table>
-    <?php
-
+if (isset($_POST["enviar"])) {
+    $um=$_POST['dia1'];
+$dois=$_POST['dia2'];
+		$sql_query =  "SELECT * FROM tb_dias where id_dia between $um and $dois";
+	   	$resultsett = mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
+    
+}
 ?>
-    <script>
-    function resetFile() {
-        const file = document.querySelector('.file');
-        file.value = '';
-    }
-    </script>
+<div class="container home">	
+	
+	<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="range">
+       <label> Insira as datas </label>
+       
+       <?php
+       
+       // escolher os dias que vão aparecer na tabela
+	   $sql_query = "SELECT * FROM tb_dias";
+	   $resultset = mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
+       echo"<select name='dia1' size='1' class='form-select form-select-sm'>";
+       echo"<option value='' disabled selected hidden> Dias </option>"; 
+	   while( $re = mysqli_fetch_assoc($resultset) ) {
+                                  $dia1=$re['dia']; 
+                                  $id1=$re['id_dia'];
+                                  echo"<option value=$id1>$dia1</option>";     
+                                  } 
+      ?> 
+        </select>
+
+        <?php
+      $sql_query = "SELECT * FROM tb_dias";
+	  $resultset = mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
+       echo"<select name='dia2' size='1' class='form-select form-select-sm'>";
+       echo"<option value='' disabled selected hidden> Dias </option>"; 
+	   while( $re = mysqli_fetch_assoc($resultset) ) {
+                                  $dia2=$re['dia']; 
+                                  $id2=$re['id_dia'];
+                                  echo"<option value=$id2>$dia2</option>";     
+                                  } 
+      ?> 
+        </select>
+         <input type="submit" name="enviar">                         
+    </form>	 
+	<table id="data_table" class="table table-striped">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nome Praia</th>
+				<th>Turno</th>
+				<?php 
+				$x=0;
+				while( $row = mysqli_fetch_assoc($resultsett) ) {
+					 
+					echo "<th>".$row['dia']."</th>";
+                            $id_dia=$row['id_dia'];
+							$x++;
+				}
+						
+				?>
+				
+			</tr>
+		</thead>
+		<tbody>
+			<?php 
+			$sql_query = "SELECT * FROM tb_praia";
+			$resultset = mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
+			while( $developer = mysqli_fetch_assoc($resultset) ) {
+			?>
+			   <tr id="<?php echo $developer ['id_praia']; ?>">
+			   <td><?php echo $developer ['id_praia']; ?></td>
+			   <td><?php echo $developer ['nome_praia']; ?></td>
+			   <td><?php echo $developer ['turno']; ?></td>
+			   <?php for($i=0;$i<$x;$i++){
+				echo "<td>".' '."</td>";
+			   }
+			   ?>
+
+			</tr>
+			<?php } ?>
+
+		</tbody>
+    </table>	
+    
+	<div style="margin:50px 0px 0px 0px;">
+    <button id="download-button">Download CSV</button>
+	</div>
+</div>
+
+
+	<script type="text/javascript">
+
+	function downloadCSVFile(csv, filename) {
+	    var csv_file, download_link;
+
+	    csv_file = new Blob([csv], {type: "text/csv"});
+
+	    download_link = document.createElement("a");
+
+	    download_link.download = filename;
+
+	    download_link.href = window.URL.createObjectURL(csv_file);
+
+	    download_link.style.display = "none";
+
+	    document.body.appendChild(download_link);
+
+	    download_link.click();
+	}
+
+		document.getElementById("download-button").addEventListener("click", function () {
+		    var html = document.querySelector("table").outerHTML;
+			htmlToCSV(html, "students.csv");
+		});
+
+
+		function htmlToCSV(html, filename) {
+			var data = [];
+			var rows = document.querySelectorAll("table tr");
+					
+			for (var i = 0; i < rows.length; i++) {
+				var row = [], cols = rows[i].querySelectorAll("td, th");
+						
+				 for (var j = 0; j < cols.length; j++) {
+				        row.push(cols[j].innerText);
+		                 }
+				        
+				data.push(row.join(","));		
+			}
+
+			//to remove table heading
+			//data.shift()
+
+			downloadCSVFile(data.join("\n"), filename);
+		}
+
+	</script>
+<script type="text/javascript" src="custom_table_edit.js"></script>
+<div class="insert-post-ads1" style="margin-top:20px;">
+
+</div>
+</div>
 </body>
-
 </html>
+ 
 
+
+
+                                                                                                       

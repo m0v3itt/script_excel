@@ -78,6 +78,7 @@ if (isset($_POST["enviar"])) {
                         }}
                         
                     ?>
+                <th>Opçoes</th>
             </tr>
         </thead>
         <?php
@@ -91,8 +92,10 @@ if (isset($_POST["enviar"])) {
                  echo '<td>' .$res['nome_praia']. '</td>';
                  echo '<td>'  .$res['turno']. '</td>';
                  foreach ($result as $row) {
-                    echo '<td>'.''.'</td>';
+                    
+                    echo '<td>'.'d'.'</td>';
                 }
+               
             
                 ?>
                
