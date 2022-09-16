@@ -10,8 +10,7 @@ $(function(){
 	  var inputObj = $("<input type='text' />");
 	  tdObj.html("");
   
-	  inputObj.width(tdObj.width())
-			  .height(tdObj.height())
+	  inputObj
 			  .css({border:"0px",fontSize:"17px"})
 			  .val(preText)
 			  .appendTo(tdObj)
