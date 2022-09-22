@@ -29,9 +29,8 @@ include_once("db_connect.php");
 
 if (isset($_POST["enviar"])) {
     $um=$_POST['dia1'];
-$dois=$_POST['dia2'];
-		$sql_query =  "SELECT tb_dias.id_dia, tb_dias.dia, tb_disponibilidade.id_nadador FROM (tb_dias inner join tb_disponibilidade on tb_disponibilidade.id_dia=tb.dias.id_dia)
-		 where tb_dias.id_dia between $um and $dois";
+	$dois=$_POST['dia2'];
+		$sql_query =  "SELECT * from tb_dias where id_dia between $um and $dois";
 	   	$resultsett = mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
     
 }
@@ -100,7 +99,7 @@ $dois=$_POST['dia2'];
 			   <td><?php echo $developer ['nome_praia']; ?></td>
 			   <td><?php echo $developer ['turno']; ?></td>
 			   <?php for($i=0;$i<$x;$i++){
-				echo "<td>".''."</td>";
+				echo "<td>".' '."</td>";
 			   }
 			   ?>
 
@@ -118,54 +117,8 @@ $dois=$_POST['dia2'];
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>          
-	<script type="text/javascript">
-
-	function downloadCSVFile(csv, filename) {
-	    var csv_file, download_link;
-
-	    csv_file = new Blob([csv], {type: "text/csv"});
-
-	    download_link = document.createElement("a");
-
-	    download_link.download = filename;
-
-	    download_link.href = window.URL.createObjectURL(csv_file);
-
-	    download_link.style.display = "none";
-
-	    document.body.appendChild(download_link);
-
-	    download_link.click();
-	}
-
-		document.getElementById("download-button").addEventListener("click", function () {
-		    var html = document.querySelector("table").outerHTML;
-			htmlToCSV(html, "Horario_Definido.csv");
-		});
-
-
-		function htmlToCSV(html, filename) {
-			var data = [];
-			var rows = document.querySelectorAll("table tr");
-					
-			for (var i = 0; i < rows.length; i++) {
-				var row = [], cols = rows[i].querySelectorAll("td, th");
-						
-				 for (var j = 0; j < cols.length; j++) {
-				        row.push(cols[j].innerText);
-		                 }
-				        
-				data.push(row.join(","));		
-			}
-
-			//to remove table heading
-			//data.shift()
-
-			downloadCSVFile(data.join("\n"), filename);
-		}
-
-	</script>
-<script type="text/javascript" src="custom_table_edit.js"></script>
+<script type="text/javascript" src="js/custom_table_edit.js"></script>
+<script type="text/javascript" src="js/export_csv.js"></script>
 <div class="insert-post-ads1" style="margin-top:20px;">
 
 </div>
