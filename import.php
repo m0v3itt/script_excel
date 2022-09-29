@@ -30,7 +30,6 @@ if (isset($_POST["import"])) {
         $spreadSheet = $Reader->load($targetPath);
         $excelSheet = $spreadSheet->getActiveSheet();
         $spreadSheetAry = $excelSheet->toArray();
-
         $header = $spreadSheetAry[0];
         //compara os index ao longo das rows
         $days= array_slice($header, 2);

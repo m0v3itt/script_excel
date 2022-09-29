@@ -37,7 +37,7 @@ if (isset($_POST["enviar"])) {
 ?>
 <div class="container home">	
 	
-	<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="range">
+	<form  method="post" name="rangee">
        <label> Insira as datas </label>
        
        <?php
@@ -67,8 +67,9 @@ if (isset($_POST["enviar"])) {
                                   } 
       ?> 
         </select>
-         <input type="submit" name="enviar">                         
+         <input type="submit" name="enviar" class="alertButton">                         
     </form>	 
+	
 	<table id="data_table" class="table table-dark">
 		<thead>
 			<tr>
@@ -108,12 +109,25 @@ if (isset($_POST["enviar"])) {
 
 		</tbody>
     </table>	
+    <div style="margin:50px 0px 0px 0px;">
+    <button id="download-button">Download CSV</button> 
+	</div>                       
     
-	<div style="margin:50px 0px 0px 0px;">
-    <button id="download-button">Download CSV</button>
-	</div>
+	
+	
 </div>
+<script>
+	$('.table').onload(function()
+{
+                                                  
+    var selectedElements = $('th');
+	for(int i=2; i<selectedElements.length; i++){
+		console.log(i)
+	}  
+                      
+});
 
+</script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>          
