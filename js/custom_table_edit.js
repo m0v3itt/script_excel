@@ -1,7 +1,5 @@
 $(function(){
-	
-
-	$("td").click(function(event){
+	$("#teste").click(function(event){
 	  if($(this).children("input").length > 0)
 			return false;
   
@@ -10,7 +8,8 @@ $(function(){
 	  var inputObj = $("<input type='text' />");
 	  tdObj.html("");
   
-	  inputObj 
+	  inputObj.width(tdObj.width())
+			  .height(tdObj.height())
 			  .css({border:"0px",fontSize:"17px"})
 			  .val(preText)
 			  .appendTo(tdObj)
@@ -31,5 +30,4 @@ $(function(){
 		return false;
 	  });
 	});
-	
   });
