@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
+
 .center {
     margin: auto;
     width: 60%;
@@ -8,3 +10,76 @@
 .hideform {
     display: none;
 }
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    background-color: rgb(134, 29, 29);
+    
+    }
+    
+    .div1 { 
+        grid-area: 3 / 2 / 4 / 3; 
+        border: 2px solid;
+    }
+    .div2 { 
+        grid-area: 3 / 3 / 4 / 4; 
+        border: 2px solid;
+    }
+    .div3 { 
+        grid-area: 3 / 4 / 4 / 5;
+        border: 2px solid;
+     }
+     .div4 { 
+        grid-area: 3 / 5 / 4 / 6;
+        border: 2px solid;
+     }
+
+h1,p{
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+a:hover{
+    text-decoration: underline;
+}
+.caixa-upload{
+ 
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(238, 238, 238);
+}
+.btn-importar, .btn-importar-custom{
+    font-family: sans-serif;
+    font-weight: 600;
+}
+.btn-importar:hover{
+    background-color: black;
+    color: white;
+    
+
+}
+.tabela{
+    width: 1400px;
+}
+.parent1 {
+    
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    }
+    
+    .div6 {
+         
+         grid-area: 2 / 1 / 3 / 2; 
+        }

@@ -112,199 +112,64 @@ if (isset($_POST["import"])) {
 <html>
 
 <head>
-    <style>
-    body {
-        font-family: Arial;
-        width: 550px;
-    }
-
-    .outer-container {
-        background: #F0F0F0;
-        border: #e0dfdf 1px solid;
-        padding: 40px 20px;
-        border-radius: 2px;
-    }
-
-    .btn-submit {
-        background: #333;
-        border: #1d1d1d 1px solid;
-        border-radius: 2px;
-        color: #f0f0f0;
-        cursor: pointer;
-        padding: 5px 20px;
-        font-size: 0.9em;
-    }
-
-    .tutorial-table {
-        margin-top: 40px;
-        font-size: 0.8em;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    .tutorial-table th {
-        background: #f0f0f0;
-        border-bottom: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    .tutorial-table td {
-        background: #FFF;
-        border-bottom: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    #response {
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 2px;
-        display: none;
-    }
-
-    .success {
-        background: #c7efd9;
-        border: #bbe2cd 1px solid;
-    }
-
-    .error {
-        background: #fbcfcf;
-        border: #f3c6c7 1px solid;
-    }
-
-    div#response.display-block {
-        display: block;
-    }
-    </style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<script src="js/jquery-3.6.1.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
+		<script type="text/javascript" src="DataTables/datatables.min.js"></script>
+        <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h2>Import Excel File into MySQL Database using PHP</h2>
+    
 
-    <div class="outer-container">
-        <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
-            <div>
-                <label>Choose Excel File</label> <input type="file" name="file" id="file" accept=".xls,.xlsx">
-                <button type="submit" id="submit" name="import" class="btn-submit">Import</button>
-                <button onclick="resetFile()">Reset file</button>
+   
+        <h1>IMPORTAR FICHEIRO</h1>
+        <div class="parent1">
+            <div class="div6">
+            <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
+            <div class="container caixa-upload">
+                <input type="file" name="file" id="file" class="btn-importar-custom" accept=".xls,.xlsx">
+                <button type="submit" id="submit" name="import" class="btn-submit btn-importar">Importar</button>
+                <button onclick="resetFile()" class="btn-importar">Limpar</button>
             </div>
 
+            </div>
+       
+       
         </form>
 
     </div>
-    <div id="response" class="<?php if(!empty($type)) { echo $type . " display-block"; } ?>">
-        <?php if(!empty($message)) { echo $message; } ?></div>
+  
 
-
-    <?php
-$sqlSelect = "SELECT * FROM tb_dias";
-$result = $db->select($sqlSelect);
-if (! empty($result)) {
-    ?>
-
-    <table class='tutorial-table'>
-        <thead>
-            <tr>
-                <th>Id_dia</th>
-                <th>Dia</th>
-            
-
-            </tr>
-        </thead>
-        <?php
-    foreach ($result as $row) { // ($row = mysqli_fetch_array($result))
-        ?>
-        <tbody>
-            <tr>
-                <td><?php  echo $row['id_dia']; ?></td>
-                <td><?php  echo $row['dia']; ?></td>
-
-            </tr>
-            <?php
-    }
-    ?>
-        </tbody>
-    </table>
-    <?php
-}
-?>
-<?php
-$sqlSelect = "SELECT * FROM tb_nadadores";
-$result = $db->select($sqlSelect);
-if (! empty($result)) {
-    ?>
-
-    <table class='tutorial-table'>
-        <thead>
-            <tr>
-                <th>Id_nadador</th>
-                <th>Nome</th>
-            
-
-            </tr>
-        </thead>
-        <?php
-    foreach ($result as $row) { // ($row = mysqli_fetch_array($result))
-        ?>
-        <tbody>
-            <tr>
-                <td><?php  echo $row['id_nadador']; ?></td>
-                <td><?php  echo $row['nome']; ?></td>
-
-            </tr>
-            <?php
-    }
-    ?>
-        </tbody>
-    </table>
-    <?php
-}
-?>
-<?php
-$sqlSelect = "SELECT * FROM tb_disponibilidade";
-$result = $db->select($sqlSelect);
-if (! empty($result)) {
-    ?>
-
-    <table class='tutorial-table'>
-        <thead>
-            <tr>
-                <th>Id_nadador</th>
-                <th>Manha</th>
-                <th>Tarde</th>
-                <th>id_dia</th>
-                <th>Preferências</th>
-            
-
-            </tr>
-        </thead>
-        <?php
-    foreach ($result as $row) { // ($row = mysqli_fetch_array($result))
-        ?>
-        <tbody>
-            <tr>
-                <td><?php  echo $row['id_nadador']; ?></td>
-                <td><?php  echo $row['Manhã']; ?></td>
-                <td><?php  echo $row['Tarde']; ?></td>
-                <td><?php  echo $row['id_dia']; ?></td>
-                <td><?php  echo $row['preferencias']; ?></td>
-
-            </tr>
-            <?php
-    }
-    ?>
-        </tbody>
-    </table>
-    <?php
-}
-?>
     <script>
     function resetFile() {
         const file = document.querySelector('.file');
         file.value = '';
     }
     </script>
+    <script>
+	$(document).ready( function () {
+    	$('#example').DataTable({
+			"ordering": false,
+			language:{
+				lengthMenu: "Apresenta _MENU_ praias por página",
+				zeroRecords: "Não existem resultados",
+				info: "Página _PAGE_ de _PAGES_",
+				infoEmpty: "Não existem resultados",
+				infoFiltered: "(Filtrado de um total de _MAX_ praias)",
+				paginate: {
+					first:      "Primeiro",
+					last:       "Ultimo",
+					next:       "Próximo",
+					previous:   "Anterior"
+    			}
+			}
+		});
+} );
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>          
 </body>
 
 </html>
