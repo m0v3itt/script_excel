@@ -23,6 +23,9 @@
     <div class="div4"> 
         <a href="import_praia.php"><p>Importar praias</p> </a> 
     </div>
+    <div class="div5"> 
+        <a href="export.php"><p>Exportar</p> </a> 
+    </div>
     </div>
     
 </body>

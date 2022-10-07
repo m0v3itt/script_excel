@@ -5,7 +5,7 @@ $(function(){
   
 	  var tdObj = $(this);
 	  var preText = tdObj.html();
-	  var inputObj = $("<input type='text' />");
+	  var inputObj = $("<input type='text'/>");
 	  tdObj.html("");
   
 	  inputObj.width(tdObj.width())
