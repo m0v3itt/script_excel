@@ -39,7 +39,8 @@ $(document).ready(function() {
 				name: "first_name"
 			}, {
 				label: "Last name:",
-				name: "last_name"
+				name: "last_name",
+				type: "select"
 			}, {
 				label: "Position:",
 				name: "position"
@@ -77,7 +78,7 @@ $(document).ready(function() {
 				orderable: false
 			},
 			{ data: "first_name" },
-			{ data: "last_name" },
+			{ data: "last_name", editField: "last_name" },
 			{ data: "position" },
 			{ data: "office" },
 			{ data: "start_date" },
