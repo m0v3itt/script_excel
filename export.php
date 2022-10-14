@@ -12,6 +12,8 @@ include_once ("db_connect.php");
 		<script src="js/jquery-3.6.1.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
 		<script type="text/javascript" src="DataTables/datatables.min.js"></script>
+		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+		
 	</head>
 	<body>
 		<div class="container" style="min-height:500px;">
@@ -98,6 +100,7 @@ include_once ("db_connect.php");
 						<td><?php echo $id_praia; ?></td>
 						<td><?php echo $nome_praia; ?></td>
 						<td><?php echo $turno; ?></td>
+						
 						<?php for ($i = 0;$i < $x;$i++)
 						{	
 							if ($id_praia % 2 == 0){
@@ -110,9 +113,15 @@ include_once ("db_connect.php");
 								where id_dia = $dias[$i] and Manhã=1 order by id_nadador ASC ";
 							}
 							$resposta = mysqli_query($conn, $query);
-							echo ('<td> 
-							<select name="nadadores" size="1" class="form-select form-select-sm">
-							');
+							echo (
+								'<td>
+								<form action="select.php" method="POST">
+								<select name="nadadores[]" size="1" class="form-select multiple-select"  multiple>
+								
+								<br>'
+							);
+							
+									
 							if (mysqli_num_rows($resposta) > 0)
 							{
 								while ($teste = mysqli_fetch_assoc($resposta))
@@ -121,16 +130,30 @@ include_once ("db_connect.php");
 									$id_nadador = $teste['id_nadador'];
 									echo "<option value=$id_nadador>$nadador</option>";
 									
+									
+									
 								}
 							}
+							else{
+								echo 'Não foram encontrados resultados!';
+							}
+							
+							echo '</select>';
+								
 						}
+						
 						}				
 						?>
 					</tr>
 					
 		</tbody>
+			
+		</table>
+		
 
-		</table>	
+		
+	
+			
 		<div style="margin:50px 0px 0px 0px;">
 		<button id="download-button">Download CSV</button> 
 		</div>                       
@@ -154,10 +177,18 @@ include_once ("db_connect.php");
 		});
 } );
 </script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>          
 <script type="text/javascript" src="js/export_csv.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+	$(".multiple-select").select2({
+  	  maximumSelectionLength: 2,
+	  language: "pt"
+});
+</script>
 </body>
 </html>
 

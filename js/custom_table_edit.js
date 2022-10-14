@@ -1,5 +1,5 @@
 $(function(){
-	$("#teste").click(function(event){
+	$("#example").click(function(event){
 	  if($(this).children("input").length > 0)
 			return false;
   
