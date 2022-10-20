@@ -64,8 +64,9 @@ include_once ("db_connect.php");
 			</select>
 			<input type="submit" name="enviar" class="alertButton">                         
 		</form>	 
-
+		<form  method="POST" action="select.php">
 		<table class="table-responsive table-striped table-bordered" id="example">
+		
 			<thead>
 				<tr>
 					<th>Id</th>
@@ -81,6 +82,7 @@ include_once ("db_connect.php");
 							$id_dia = $row['id_dia'];
 							array_push($dias, $id_dia);
 							$x++;
+							
 						}
 					?>
 				</tr>
@@ -94,11 +96,12 @@ include_once ("db_connect.php");
 							$id_praia = $res['id_praia'];
 							$nome_praia = $res['nome_praia'];
 							$turno = $res['turno'];
-						
+							
+							
 					?>
 						<tr id="<?php $id_praia; ?>">
-						<td><?php echo $id_praia; ?></td>
-						<td><?php echo $nome_praia; ?></td>
+						<td> <?php echo $id_praia; ?></td>
+						<td><?php echo $nome_praia; ?> </td>
 						<td><?php echo $turno; ?></td>
 						
 						<?php for ($i = 0;$i < $x;$i++)
@@ -114,10 +117,11 @@ include_once ("db_connect.php");
 							}
 							$resposta = mysqli_query($conn, $query);
 							echo (
+
 								'<td>
-								<form action="select.php" method="POST">
-								<select name="nadadores[]" size="1" class="form-select multiple-select"  multiple>
 								
+								
+								<select name="nadadores[]"  size="1" class="form-select multiple-select"    multiple>
 								<br>'
 							);
 							
@@ -130,25 +134,31 @@ include_once ("db_connect.php");
 									$id_nadador = $teste['id_nadador'];
 									echo "<option value=$id_nadador>$nadador</option>";
 									
+									 
 									
 									
 								}
+								echo '</select>';
+								
 							}
 							else{
 								echo 'Não foram encontrados resultados!';
 							}
 							
-							echo '</select>';
-								
+							
+							echo $dias[$i] . $turno . $id_praia ;	
 						}
+
+                        
+						
 						
 						}				
 						?>
 					</tr>
-					
-		</tbody>
-			
-		</table>
+				</tbody>
+			</table>
+		<input type="submit" name="enviar" value="Enviar">
+		</form>
 		
 
 		
@@ -187,7 +197,14 @@ include_once ("db_connect.php");
 	$(".multiple-select").select2({
   	  maximumSelectionLength: 2,
 	  language: "pt"
+	 
 });
+$('select').blur(function(){
+	
+    console.log("ola");
+
+});
+    
 </script>
 </body>
 </html>
