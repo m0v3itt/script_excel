@@ -22,7 +22,7 @@ include_once ("db_connect.php");
 		<?php
 
 		// Selecionar os dias que vão aparecer na tabela
-			if (isset($_POST["enviar"]))
+			if (isset($_POST["submeter"]))
 			{
 				$um = $_POST['dia1'];
 				$dois = $_POST['dia2'];
@@ -62,7 +62,7 @@ include_once ("db_connect.php");
 			}
 		?> 
 			</select>
-			<input type="submit" name="enviar" class="alertButton">                         
+			<input type="submit" name="submeter" class="alertButton">                         
 		</form>	 
 		<form  method="POST" action="select.php">
 		<table class="table-responsive table-striped table-bordered" id="example">
@@ -75,6 +75,7 @@ include_once ("db_connect.php");
 					<?php
 						$x = 0;
 						$dias = array();
+						$id_diasLenght = count($dias);
 						while ($row = mysqli_fetch_assoc($resultsett))
 						{
 							echo "<th>" . $row['dia'] . "</th>";
@@ -83,11 +84,18 @@ include_once ("db_connect.php");
 							array_push($dias, $id_dia);
 							$x++;
 							
+							
+						
+							
 						}
-					?>
+						var_dump($dias);
+					
+						 ?>
+					
 				</tr>
 			</thead>
-		<tbody>
+		<tbody>	
+						
 					<?php
 						$sql_query = "SELECT * FROM tb_praia";
 						$resultset = mysqli_query($conn, $sql_query) or die("database error:" . mysqli_error($conn));
@@ -98,15 +106,21 @@ include_once ("db_connect.php");
 							$turno = $res['turno'];
 							
 							
+							
 					?>
 						<tr id="<?php $id_praia; ?>">
 						<td> <?php echo $id_praia; ?></td>
 						<td><?php echo $nome_praia; ?> </td>
 						<td><?php echo $turno; ?></td>
-						
+						<input type='hidden' name='id_praia[]' value=<?php echo $id_praia ;?> >
+						<input type='hidden' name='nome_praia[]' value=<?php echo $nome_praia ;?> >
+						<input type='hidden' name='turno[]' value=<?php echo $turno ;?> >
+					
+
 						<?php for ($i = 0;$i < $x;$i++)
 						{	
 							if ($id_praia % 2 == 0){
+							
 								$query = "SELECT tb_nadadores.id_nadador, nome from tb_disponibilidade inner JOIN 
 								tb_nadadores on tb_disponibilidade.id_nadador=tb_nadadores.id_nadador 
 								where id_dia = $dias[$i] and Tarde=1 order by id_nadador ASC";
@@ -116,6 +130,7 @@ include_once ("db_connect.php");
 								where id_dia = $dias[$i] and Manhã=1 order by id_nadador ASC ";
 							}
 							$resposta = mysqli_query($conn, $query);
+							
 							echo (
 
 								'<td>
@@ -146,8 +161,12 @@ include_once ("db_connect.php");
 							}
 							
 							
-							echo $dias[$i] . $turno . $id_praia ;	
+							
+							
+						
+							
 						}
+						
 
                         
 						
@@ -199,11 +218,10 @@ include_once ("db_connect.php");
 	  language: "pt"
 	 
 });
-$('select').blur(function(){
-	
-    console.log("ola");
-
-});
+$('select').on('select2:close', function (e) {
+    var data = e.params.data;
+    console.log(data);
+})
     
 </script>
 </body>
