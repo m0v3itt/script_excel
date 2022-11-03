@@ -38,8 +38,5 @@
 				data.push(row.join(","));		
 			}
 
-			//to remove table heading
-			//data.shift()
-
 			downloadCSVFile(data.join("\n"), filename);
 		}

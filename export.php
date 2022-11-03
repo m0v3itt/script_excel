@@ -1,6 +1,6 @@
 <?php
 include_once ("db_connect.php");
-
+include_once ("db_connect.php");
 ?>
 
 <!DOCTYPE html>
@@ -16,9 +16,7 @@ include_once ("db_connect.php");
 		
 	</head>
 	<body>
-		<div class="container" style="min-height:500px;">
-		<div class=''>
-		</div>
+		
 		<?php
 
 		// Selecionar os dias que vão aparecer na tabela
@@ -27,11 +25,11 @@ include_once ("db_connect.php");
 				$um = $_POST['dia1'];
 				$dois = $_POST['dia2'];
 				$sql_query = "SELECT * from tb_dias where id_dia between $um and $dois";
-				$resultsett = mysqli_query($conn, $sql_query) or die("database error:" . mysqli_error($conn));
+				$resultsett = mysqli_query($conn, $sql_query);
 
 			}
 			?>
-		<div class="container home">
+		
 
 		<form  method="post" name="rangee">
 		<label> Insira as datas </label>
@@ -65,7 +63,7 @@ include_once ("db_connect.php");
 			<input type="submit" name="submeter" class="alertButton">                         
 		</form>	 
 		<form  method="POST">
-		<table class="table-responsive table-striped table-bordered" id="example">
+		<table class="table-responsive table-bordered" id="example">
 		
 			<thead>
 				<tr>
@@ -121,7 +119,7 @@ include_once ("db_connect.php");
 							$resposta = mysqli_query($conn, $query);
 							echo (
 								'<td>
-								<select name="nadadores[]"  size="1" class="form-select multiple-select"  data-praia="'.$id_praia.'" data-dia="'.$dias[$i].'"  multiple>
+								<select name="nadadores[]"  size="1" class="form-select multiple-select"  data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$dias[$i].'" data-id_escala="'.$x.'"  multiple>
 								<br>'
 							);		
 							if (mysqli_num_rows($resposta) > 0)
@@ -175,22 +173,39 @@ include_once ("db_connect.php");
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 
+
+
 	$(".multiple-select").select2({
   	  maximumSelectionLength: 2,
-	  language: "pt"
+	  language: "pt",
+	  width: 'resolve'
+	});
+	
+	$('.multiple-select').on('select2:select', function (e) {
+		var  {id}  = e.params.data;
+		
+		var { dia, praia, turno} = e.currentTarget.dataset
+		
+		console.log({ dia, praia, id, turno});
+		$.post('data.php', { dia, praia, id, turno })
+		// console.log(data);
+		
+	})
+	
+	$('.multiple-select').on('select2:unselect', function (remove) {
+		var  {id}  = remove.params.data;
+		var { dia, praia, turno} = remove.currentTarget.dataset
+		$.post('remove.php',  { dia, praia, id, turno })
+        console.log( { dia, praia, id, turno });
 });
 
-$('select').on('select2:select', function (e) {
-    var { id } = e.params.data;
-	console.log(e);
-	var { dia, praia } = e.currentTarget.dataset
-	console.log({ dia, praia, id });
-	$.post('data.php', { dia, praia, id })
-    // console.log(data);
-})
+
+
+
 
 </script>
 </body>
+
 </html>
 
 

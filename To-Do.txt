@@ -1,0 +1,4 @@
+Ao clicar no botao X remover da base de dados. (done)
+Dropdowns dinamicos sem os nomes selecionados anteriormente.
+Como organizar o histórico.
+Exportar para csv.
