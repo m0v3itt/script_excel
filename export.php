@@ -27,7 +27,10 @@ include_once ("db_connect.php");
 				$dois = $_POST['dia2'];
 				$sql_query = "SELECT * from tb_dias where id_dia between $um and $dois";
 				$resultsett = mysqli_query($conn, $sql_query);
-
+		
+				// $data = "Escala"."$um"."_"."$dois";
+				// echo $data;
+				echo $um;
 			}
 			?>
 		
@@ -44,6 +47,7 @@ include_once ("db_connect.php");
 			{
 				$dia1 = $re['dia'];
 				$id1 = $re['id_dia'];
+				
 				echo "<option value=$id1>$dia1</option>";
 			}
 		?> 
@@ -59,8 +63,11 @@ include_once ("db_connect.php");
 				$id2 = $re['id_dia'];
 				echo "<option value=$id2>$dia2</option>";
 			}
+
+			$data = "Escala"
 		?> 
 			</select>
+		
 			<input type="submit" name="submeter" class="alertButton">                         
 		</form>	 
 		<form  method="POST">
@@ -83,13 +90,13 @@ include_once ("db_connect.php");
 							array_push($dias, $id_dia);
 							$x++;	
 						}
-						echo "<input type='hidden' name='dias[]' value=$id_dia >";
 
 						 ?>
 				</tr>
 			</thead>
 		<tbody>	
 					<?php
+						
 						$sql_query = "SELECT * FROM tb_praia";
 						$resultset = mysqli_query($conn, $sql_query);
 						while ($res = mysqli_fetch_assoc($resultset))
@@ -102,40 +109,37 @@ include_once ("db_connect.php");
 						<td> <?php echo $id_praia; ?></td>
 						<td><?php echo $nome_praia; ?> </td>
 						<td><?php echo $turno; ?></td>
-						<input type='hidden' name='id_praia[]' value=<?php echo $id_praia ;?> >
-						<input type='hidden' name='nome_praia[]' value=<?php echo $nome_praia ;?> >
-						<input type='hidden' name='turno[]' value=<?php echo $turno ;?> >
 						<?php for ($i = 0;$i < $x;$i++)
 						{	
-							if ($id_praia % 2 == 0){
+							// if ($id_praia % 2 == 0){
 							
-								$query = "SELECT tb_nadadores.id_nadador, nome from tb_disponibilidade inner JOIN 
-								tb_nadadores on tb_disponibilidade.id_nadador=tb_nadadores.id_nadador 
-								where id_dia = $dias[$i] and Tarde=1 order by id_nadador ASC";
-							}else{
-								$query = "SELECT tb_nadadores.id_nadador, nome from tb_disponibilidade inner JOIN 
-								tb_nadadores on tb_disponibilidade.id_nadador=tb_nadadores.id_nadador 
-								where id_dia = $dias[$i] and Manhã=1 order by id_nadador ASC ";
-							}
-							$resposta = mysqli_query($conn, $query);
+							// 	$query = "SELECT tb_nadadores.id_nadador, nome from tb_disponibilidade inner JOIN 
+							// 	tb_nadadores on tb_disponibilidade.id_nadador=tb_nadadores.id_nadador 
+							// 	where id_dia = $dias[$i] and Tarde=1 order by id_nadador ASC";
+							// }else{
+							// 	$query = "SELECT tb_nadadores.id_nadador, nome from tb_disponibilidade inner JOIN 
+							// 	tb_nadadores on tb_disponibilidade.id_nadador=tb_nadadores.id_nadador 
+							// 	where id_dia = $dias[$i] and Manhã=1 order by id_nadador ASC ";
+							// }
+							// $resposta = mysqli_query($conn, $query);
 							echo (
 								'<td>
-								<select name="nadadores[]"  size="1" class="form-select multiple-select"  data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$dias[$i].'" data-id_escala="'.$x.'"  multiple>
+								<select name="nadadores[]" size="1" class="form-select multiple-select"  data-ajax--url="cenas.php?dia='.$dias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$dias[$i].'"  multiple></select>
 								<br>'
 							);		
-							if (mysqli_num_rows($resposta) > 0)
-							{
-								while ($teste = mysqli_fetch_assoc($resposta))
-								{
-									$nadador = $teste['nome'];
-									$id_nadador = $teste['id_nadador'];
-									echo "<option value=$id_nadador>$nadador</option>";	
-								}
-								echo '</select>';					
-							}
-							else{
-								echo 'Não foram encontrados resultados!';
-							}
+							// if (mysqli_num_rows($resposta) > 0)
+							// {
+							// 	while ($teste = mysqli_fetch_assoc($resposta))
+							// 	{
+							// 		$nadador = $teste['nome'];
+							// 		$id_nadador = $teste['id_nadador'];
+							// 		echo "<option value=$id_nadador>$nadador</option>";	
+							// 	}
+							// 	echo '</select>';					
+							// }
+							// else{
+							// 	echo 'Não foram encontrados resultados!';
+							// }
 	
 						}
 					}				
@@ -173,33 +177,30 @@ include_once ("db_connect.php");
 <script type="text/javascript" src="js/export_csv.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-
-
-
 	$(".multiple-select").select2({
   	  maximumSelectionLength: 2,
 	  language: "pt",
 	  width: 'resolve',
-	  tags: 'true'
-	  
+	  tags: 'true',
 	});
 	
 	$('.multiple-select').on('select2:select', function (e) {
+		console.log(e);
 		var  {id}  = e.params.data;
 		
-		var { dia, praia, turno} = e.currentTarget.dataset
+		var { dia, praia, turno, codigo} = e.currentTarget.dataset
 		
-		console.log({ dia, praia, id, turno});
-		$.post('data.php', { dia, praia, id, turno })
+		console.log({ dia, praia, id, turno, codigo});
+		$.post('data.php', { dia, praia, id, turno, codigo })
 		// console.log(data);
 		
 	})
 	
 	$('.multiple-select').on('select2:unselect', function (remove) {
 		var  {id}  = remove.params.data;
-		var { dia, praia, turno} = remove.currentTarget.dataset
-		$.post('remove.php',  { dia, praia, id, turno })
-        console.log( { dia, praia, id, turno });
+		var { dia, praia, turno, codigo} = remove.currentTarget.dataset
+		$.post('remove.php',  { dia, praia, id, turno, codigo })
+        console.log( { dia, praia, id, turno, codigo });
 });
 
 // $('.multiple-select').select2({
