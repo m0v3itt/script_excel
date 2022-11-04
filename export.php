@@ -13,6 +13,7 @@ include_once ("db_connect.php");
 		<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
 		<script type="text/javascript" src="DataTables/datatables.min.js"></script>
 		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="style.css">
 		
 	</head>
 	<body>
@@ -63,7 +64,7 @@ include_once ("db_connect.php");
 			<input type="submit" name="submeter" class="alertButton">                         
 		</form>	 
 		<form  method="POST">
-		<table class="table-responsive table-bordered" id="example">
+		<table class="table-responsive table-bordered table-striped" id="example">
 		
 			<thead>
 				<tr>
@@ -178,7 +179,9 @@ include_once ("db_connect.php");
 	$(".multiple-select").select2({
   	  maximumSelectionLength: 2,
 	  language: "pt",
-	  width: 'resolve'
+	  width: 'resolve',
+	  tags: 'true'
+	  
 	});
 	
 	$('.multiple-select').on('select2:select', function (e) {
@@ -199,7 +202,18 @@ include_once ("db_connect.php");
         console.log( { dia, praia, id, turno });
 });
 
+// $('.multiple-select').select2({
+//   // ...
+//   templateSelection: function (data, container) {
+//     // Add custom attributes to the <option> tag for the selected option
+//     $(data.element).attr('data-custom-attribute', data.customValue);
+//     return data.text;
+	
+//   }
+// });
 
+// // Retrieve custom attribute value of the first selected element
+// $('.multiple-select').find(':selected').data('custom-attribute');
 
 
 
