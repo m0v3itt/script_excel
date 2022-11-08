@@ -1,6 +1,5 @@
 <?php
 include_once ("db_connect.php");
-include_once ("db_connect.php");
 ?>
 
 <!DOCTYPE html>
@@ -27,9 +26,6 @@ include_once ("db_connect.php");
 				$dois = $_POST['dia2'];
 				$sql_query = "SELECT * from tb_dias where id_dia between $um and $dois";
 				$resultsett = mysqli_query($conn, $sql_query);
-		
-				// $data = "Escala"."$um"."_"."$dois";
-				// echo $data;
 				echo $um;
 			}
 			?>
@@ -110,37 +106,13 @@ include_once ("db_connect.php");
 						<td><?php echo $nome_praia; ?> </td>
 						<td><?php echo $turno; ?></td>
 						<?php for ($i = 0;$i < $x;$i++)
-						{	
-							// if ($id_praia % 2 == 0){
-							
-							// 	$query = "SELECT tb_nadadores.id_nadador, nome from tb_disponibilidade inner JOIN 
-							// 	tb_nadadores on tb_disponibilidade.id_nadador=tb_nadadores.id_nadador 
-							// 	where id_dia = $dias[$i] and Tarde=1 order by id_nadador ASC";
-							// }else{
-							// 	$query = "SELECT tb_nadadores.id_nadador, nome from tb_disponibilidade inner JOIN 
-							// 	tb_nadadores on tb_disponibilidade.id_nadador=tb_nadadores.id_nadador 
-							// 	where id_dia = $dias[$i] and Manhã=1 order by id_nadador ASC ";
-							// }
-							// $resposta = mysqli_query($conn, $query);
+						{
 							echo (
 								'<td>
-								<select name="nadadores[]" size="1" class="form-select multiple-select"  data-ajax--url="cenas.php?dia='.$dias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$dias[$i].'"  multiple></select>
+								<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px"  data-ajax--url="cenas.php?dia='.$dias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$dias[$i].'"  multiple></select>
 								<br>'
 							);		
-							// if (mysqli_num_rows($resposta) > 0)
-							// {
-							// 	while ($teste = mysqli_fetch_assoc($resposta))
-							// 	{
-							// 		$nadador = $teste['nome'];
-							// 		$id_nadador = $teste['id_nadador'];
-							// 		echo "<option value=$id_nadador>$nadador</option>";	
-							// 	}
-							// 	echo '</select>';					
-							// }
-							// else{
-							// 	echo 'Não foram encontrados resultados!';
-							// }
-	
+							
 						}
 					}				
 						?>
@@ -151,11 +123,13 @@ include_once ("db_connect.php");
 		</form>
 		<div style="margin:50px 0px 0px 0px;">
 			<button id="download-button">Download CSV</button> 
-		</div>                       
+		</div>   
+		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>                    
 <script>
 	$(document).ready( function () {
     	$('#example').DataTable({
 			"ordering": false,
+			"lengthMenu": [25, 100],
 			language:{
 				lengthMenu: "Apresenta _MENU_ praias por página",
 				zeroRecords: "Não existem resultados",
@@ -172,53 +146,48 @@ include_once ("db_connect.php");
 		});
 } );
 </script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>          
-<script type="text/javascript" src="js/export_csv.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
+
 	$(".multiple-select").select2({
-  	  maximumSelectionLength: 2,
-	  language: "pt",
-	  width: 'resolve',
-	  tags: 'true',
+		maximumSelectionLength: 2,
+		ajax:{
+			processResults: function (data) {
+			// Transforms the top-level key of the response object from 'items' to 'results'
+			return {
+				results: data
+      			};
+    		}
+		}
 	});
 	
 	$('.multiple-select').on('select2:select', function (e) {
 		console.log(e);
 		var  {id}  = e.params.data;
 		
-		var { dia, praia, turno, codigo} = e.currentTarget.dataset
+		var { dia, praia, turno} = e.currentTarget.dataset
 		
-		console.log({ dia, praia, id, turno, codigo});
-		$.post('data.php', { dia, praia, id, turno, codigo })
+		console.log({ dia, praia, id, turno});
+		$.post('data.php', { dia, praia, id, turno })
 		// console.log(data);
 		
 	})
 	
 	$('.multiple-select').on('select2:unselect', function (remove) {
 		var  {id}  = remove.params.data;
-		var { dia, praia, turno, codigo} = remove.currentTarget.dataset
-		$.post('remove.php',  { dia, praia, id, turno, codigo })
-        console.log( { dia, praia, id, turno, codigo });
-});
+		var { dia, praia, turno} = remove.currentTarget.dataset
+		$.post('remove.php',  { dia, praia, id, turno})
+        console.log( { dia, praia, id, turno });
+	});
 
-// $('.multiple-select').select2({
-//   // ...
-//   templateSelection: function (data, container) {
-//     // Add custom attributes to the <option> tag for the selected option
-//     $(data.element).attr('data-custom-attribute', data.customValue);
-//     return data.text;
-	
-//   }
-// });
-
-// // Retrieve custom attribute value of the first selected element
-// $('.multiple-select').find(':selected').data('custom-attribute');
 
 
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>          
+<script type="text/javascript" src="js/export_csv.js"></script>
+
 </body>
 
 </html>
