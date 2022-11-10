@@ -5,14 +5,15 @@ include_once ("db_connect.php");
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Script</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<script src="js/jquery-3.6.1.min.js"></script>
+		<title>Script</title>
 		<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
-		<script type="text/javascript" src="DataTables/datatables.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="assets/css/style.css">
+		<script src="assets/js/jquery-3.6.1.min.js"></script>
+		<script type="text/javascript" src="DataTables/datatables.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>   
 		
 	</head>
 	<body>
@@ -109,7 +110,7 @@ include_once ("db_connect.php");
 						{
 							echo (
 								'<td>
-								<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px"  data-ajax--url="cenas.php?dia='.$dias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$dias[$i].'"  multiple></select>
+								<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px"  data-ajax--url="Dropdown.php?dia='.$dias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$dias[$i].'"  multiple></select>
 								<br>'
 							);		
 							
@@ -124,69 +125,11 @@ include_once ("db_connect.php");
 		<div style="margin:50px 0px 0px 0px;">
 			<button id="download-button">Download CSV</button> 
 		</div>   
-		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>                    
-<script>
-	$(document).ready( function () {
-    	$('#example').DataTable({
-			"ordering": false,
-			"lengthMenu": [25, 100],
-			language:{
-				lengthMenu: "Apresenta _MENU_ praias por página",
-				zeroRecords: "Não existem resultados",
-				info: "Página _PAGE_ de _PAGES_",
-				infoEmpty: "Não existem resultados",
-				infoFiltered: "(Filtrado de um total de _MAX_ praias)",
-				paginate: {
-					first:      "Primeiro",
-					last:       "Ultimo",
-					next:       "Próximo",
-					previous:   "Anterior"
-    			}
-			}
-		});
-} );
-</script>
-
-<script>
-
-	$(".multiple-select").select2({
-		maximumSelectionLength: 2,
-		ajax:{
-			processResults: function (data) {
-			// Transforms the top-level key of the response object from 'items' to 'results'
-			return {
-				results: data
-      			};
-    		}
-		}
-	});
-	
-	$('.multiple-select').on('select2:select', function (e) {
-		console.log(e);
-		var  {id}  = e.params.data;
-		
-		var { dia, praia, turno} = e.currentTarget.dataset
-		
-		console.log({ dia, praia, id, turno});
-		$.post('data.php', { dia, praia, id, turno })
-		// console.log(data);
-		
-	})
-	
-	$('.multiple-select').on('select2:unselect', function (remove) {
-		var  {id}  = remove.params.data;
-		var { dia, praia, turno} = remove.currentTarget.dataset
-		$.post('remove.php',  { dia, praia, id, turno})
-        console.log( { dia, praia, id, turno });
-	});
-
-
-
-
-</script>
+<script src="assets/js/DataTables_configuration.js"></script>
+<script src="assets/js/select2_configurations.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>          
-<script type="text/javascript" src="js/export_csv.js"></script>
+<script type="text/javascript" src="assets/js/export_csv.js"></script>
 
 </body>
 
