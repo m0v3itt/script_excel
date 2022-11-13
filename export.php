@@ -1,45 +1,35 @@
 <?php
+use Phppot\DataSource;
 include_once ("db_connect.php");
+include ("header.php");
+require_once 'DataSource.php';
+$db = new DataSource();
+$conn = $db->getConnection();
 ?>
-
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Script</title>
-		<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-		<link rel="stylesheet" href="assets/css/style.css">
-		<script src="assets/js/jquery-3.6.1.min.js"></script>
-		<script type="text/javascript" src="DataTables/datatables.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>   
-		
-	</head>
 	<body>
-		
 		<?php
-
 		// Selecionar os dias que vão aparecer na tabela
 			if (isset($_POST["submeter"]))
 			{
+				
 				$um = $_POST['dia1'];
 				$dois = $_POST['dia2'];
 				$sql_query = "SELECT * from tb_dias where id_dia between $um and $dois";
 				$resultsett = mysqli_query($conn, $sql_query);
-				echo $um;
 			}
 			?>
+		<br>
+		<div class="valign-middle text-center">
+        	<h1 class="import-h1">INSIRA AS DATAS</h1>
+        		<div class="importar container">	
+					<form  method="post" name="rangee">
 		
-
-		<form  method="post" name="rangee">
-		<label> Insira as datas </label>
 		<?php
 			// escolher os dias que vão aparecer na tabela
 			$sql_query = "SELECT * FROM tb_dias";
 			$resultset = mysqli_query($conn, $sql_query);
 			echo "<select name='dia1' size='1' class='form-select form-select-sm'>";
-			echo "<option value='' disabled selected hidden> Dias </option>";
+			echo "<option value='' disabled selected hidden> De </option>";
 			while ($re = mysqli_fetch_assoc($resultset))
 			{
 				$dia1 = $re['dia'];
@@ -53,7 +43,7 @@ include_once ("db_connect.php");
 			$sql_query = "SELECT * FROM tb_dias";
 			$resultset = mysqli_query($conn, $sql_query);
 			echo "<select name='dia2' size='1' class='form-select form-select-sm'>";
-			echo "<option value='' disabled selected hidden> Dias </option>";
+			echo "<option value='' disabled selected hidden> A </option>";
 			while ($re = mysqli_fetch_assoc($resultset))
 			{
 				$dia2 = $re['dia'];
@@ -65,29 +55,43 @@ include_once ("db_connect.php");
 		?> 
 			</select>
 		
-			<input type="submit" name="submeter" class="alertButton">                         
-		</form>	 
+			<button type="submit" name="submeter" class="btn-submit btn-importar"> Enviar </button>                         
+		</form>
+		</div>
+		</div> 
 		<form  method="POST">
-		<table class="table-responsive table-bordered table-striped" id="example">
 		
-			<thead>
-				<tr>
-					<th>Id</th>
-					<th>Nome Praia</th>
-					<th>Turno</th>
 					<?php
+					   if (isset($_POST["submeter"]))
+						{
+							echo ( '<table class="table table-bordered table-striped" id="example">
+										<thead>
+											<tr>
+											<th>Id</th>
+											<th>Nome Praia</th>
+											<th>Turno</th>');
 						$x = 0;
-						$dias = array();
-						$id_diasLenght = count($dias);
+						$ArrayIdDias = array();
+						$ArrayDias = array();
 						while ($row = mysqli_fetch_assoc($resultsett))
 						{
 							echo "<th>" . $row['dia'] . "</th>";
 							$dia = $row['dia'];
 							$id_dia = $row['id_dia'];
-							array_push($dias, $id_dia);
+							array_push($ArrayIdDias, $id_dia);
+							array_push($ArrayDias, $dia);
 							$x++;	
 						}
-
+						//Gerar código para a escala
+						$PrimeiraDataCodigo = $ArrayDias[0];
+						$SegundaDataCodigo = end($ArrayDias);
+						$codigo = "Escala_".$PrimeiraDataCodigo."_".$SegundaDataCodigo;
+						$query = "insert into tb_historico(codigo) values(?)";
+							$paramType = "s";
+							$paramArray = array(
+								$codigo
+							);
+							$insertId = $db->insert($query, $paramType, $paramArray);
 						 ?>
 				</tr>
 			</thead>
@@ -110,21 +114,25 @@ include_once ("db_connect.php");
 						{
 							echo (
 								'<td>
-								<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px"  data-ajax--url="Dropdown.php?dia='.$dias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$dias[$i].'"  multiple></select>
+								<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px" data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'&codigo='.$codigo.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'" data-codigo="'.$codigo.'"  multiple></select>
 								<br>'
 							);		
 							
 						}
+					}
+					echo ('</tr>
+							</tbody>
+								</table>
+									<input type="submit" name="enviar" value="Enviar">
+										</form>
+											<div style="margin:50px 0px 0px 0px;">
+												<button id="download-button">Download CSV</button> 
+											</div>'
+						);
 					}				
-						?>
-					</tr>
-				</tbody>
-			</table>
-			<input type="submit" name="enviar" value="Enviar">
-		</form>
-		<div style="margin:50px 0px 0px 0px;">
-			<button id="download-button">Download CSV</button> 
-		</div>   
+					?>
+					
+		  
 <script src="assets/js/DataTables_configuration.js"></script>
 <script src="assets/js/select2_configurations.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -134,8 +142,3 @@ include_once ("db_connect.php");
 </body>
 
 </html>
-
-
-
-
-                                                                                                       

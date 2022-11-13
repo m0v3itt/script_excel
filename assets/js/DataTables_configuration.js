@@ -1,9 +1,9 @@
 $(document).ready( function () {
     $('#example').DataTable({
         "ordering": false,
-        "lengthMenu": [25, 100],
+        "lengthMenu": [100],
         language:{
-            lengthMenu: "Apresenta _MENU_ praias por página",
+            lengthMenu: false,
             zeroRecords: "Não existem resultados",
             info: "Página _PAGE_ de _PAGES_",
             infoEmpty: "Não existem resultados",

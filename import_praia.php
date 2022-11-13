@@ -6,6 +6,7 @@ require_once 'DataSource.php';
 $db = new DataSource();
 $conn = $db->getConnection();
 require_once ('./vendor/autoload.php');
+include("header.php");
 
 if (isset($_POST["import"])) {
 
@@ -57,18 +58,6 @@ if (isset($_POST["import"])) {
     }
 }
 ?>
-<!DOCTYPE html>
-<html>
-
-<head>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="assets/js/jquery-3.6.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css" />
-    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
 
 <body>
     <div class="fullscreen table-cell valign-middle text-center">
@@ -79,47 +68,12 @@ if (isset($_POST["import"])) {
                 <button type="submit" id="submit" name="import" class="btn-submit btn-importar">Importar</button>
                 <button onclick="resetFile()" class="btn-importar">Limpar</button>
         </div>
-    
-  
     </form>
     </div>
    
     <div id="response" class="<?php if(!empty($type)) { echo $type . " display-block"; } ?>">
         <?php if(!empty($message)) { echo $message; } ?></div>
 
-
-    <?php
-$sqlSelect = "SELECT * FROM tb_dias";
-$result = $db->select($sqlSelect);
-if (! empty($result)) {
-    ?>
-
-    <table class='tutorial-table'>
-        <thead>
-            <tr>
-                <th>Id_dia</th>
-                <th>Dia</th>
-            
-
-            </tr>
-        </thead>
-        <?php
-    foreach ($result as $row) { // ($row = mysqli_fetch_array($result))
-        ?>
-        <tbody>
-            <tr>
-                <td><?php  echo $row['id_dia']; ?></td>
-                <td><?php  echo $row['dia']; ?></td>
-
-            </tr>
-            <?php
-    }
-    ?>
-        </tbody>
-    </table>
-    <?php
-}
-?>
     <script>
     function resetFile() {
         const file = document.querySelector('.file');
