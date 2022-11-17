@@ -19,7 +19,7 @@
 		
 		console.log({ dia, praia, id, turno, codigo});
 		$.post('data.php', { dia, praia, id, turno , codigo})
-		// console.log(data);
+		
 		
 	})
 	

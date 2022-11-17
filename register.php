@@ -7,29 +7,26 @@ $db = new DataSource();
 
 	if (isset($_POST['submit'])) {
 
-		$username = $conn->real_escape_string($_POST['username']);
-		$password = $conn->real_escape_string($_POST['password']);
 
-		$sql = $conn->query("SELECT id, senha, admin FROM tb_login WHERE user='$username'");
-		if ($sql->num_rows > 0) {
-		    $data = $sql->fetch_array();
-		    if (password_verify($password, $data['senha'])) {
-				$admin = $data['admin'];
-		        $msg = "Login completo!";
-				
-				if ($admin == 1 ){
-					$_SESSION['admin'] = $admin;
-					echo "Entrou corretamente";
-					header("location: index.php");
-				}
-				else{
-					echo "Não é admin";
-					$_SESSION['admin'] = $admin;
-				}
-            } else
-			    $msg = "Os dados estão errados!";
-        } else
-            $msg = "Os dados estão errados!";
+		$username = $_POST['username'];
+		$password = $_POST['password'];
+		$cPassword = $_POST['cPassword'];
+
+		if ($password != $cPassword)
+			$msg = "As passwords não coincidem";
+		else {
+			$hash = password_hash($password, PASSWORD_BCRYPT);
+			$query = 'insert into tb_login(user,senha,admin) values(?,?,?)';
+            $paramType = "ssi";
+            $paramArray = array(
+                $username,
+				$hash,
+				0
+            );
+            $insertId = $db->insert($query, $paramType, $paramArray);
+
+			$msg = "Registo completo!";
+		}
 	}
 ?>
 <!doctype html>
@@ -39,7 +36,7 @@ $db = new DataSource();
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>PHP Password Hashing - Log In</title>
+    <title>PHP Password Hashing - Register</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 </head>
 <body>
@@ -50,10 +47,11 @@ $db = new DataSource();
 
 				<?php if ($msg != "") echo $msg . "<br><br>"; ?>
 
-				<form method="post" action="login.php">
-					<input class="form-control" name="username" type="text" placeholder="Username..."><br>
+				<form method="post" action="register.php">
+					<input class="form-control" name="username" type="username" placeholder="Username..."><br>
 					<input class="form-control" minlength="5" name="password" type="password" placeholder="Password..."><br>
-					<input class="btn btn-primary" name="submit" type="submit" value="Log In"><br>
+					<input class="form-control" minlength="5" name="cPassword" type="password" placeholder="Confirm Password..."><br>
+					<input class="btn btn-primary" name="submit" type="submit" value="Register..."><br>
 				</form>
 
 			</div>
