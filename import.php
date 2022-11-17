@@ -6,6 +6,7 @@ require_once 'DataSource.php';
 $db = new DataSource();
 $conn = $db->getConnection();
 require_once ('./vendor/autoload.php');
+include("header.php");
 
 if (isset($_POST["import"])) {
 
@@ -108,18 +109,6 @@ if (isset($_POST["import"])) {
 }
 ?>
 
-<!DOCTYPE html>
-<html>
-
-<head>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="assets/js/jquery-3.6.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css" />
-    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
 
 <body>
     <div class="fullscreen table-cell valign-middle text-center">

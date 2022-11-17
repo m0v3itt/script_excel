@@ -1,25 +1,20 @@
 <?php
     require_once "db_connect.php";
-    
+    include("header.php");
 
     $sql= "SELECT tb_produtos.id_produto,tb_produtos.tipo_produto,tb_produtos.nome_produto,tb_produtos.preco_produto,tb_produtos.descricao_produto,tb_familia_produtos.familia_tipo_produto from tb_produtos 
     inner join tb_familia_produtos on tb_produtos.tipo_produto=tb_familia_produtos.id_familia";
     $result=$link->query($sql);
 ?>
 
-<!DOCTYPE html>
-<html lang="pt">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Histórico</title>
+
     <style>
         .btn {
             margin-left: 10px;
         }
     </style>
-    <link rel="shortcut icon" href="imagens/logo.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
 
     <style>
 .btn{
