@@ -1,8 +1,5 @@
 <?php
-use Phppot\DataSource;
-include ("header.php");
-require_once 'DataSource.php';
-$db = new DataSource();
+include_once("db_connect.php");
 	$msg = "";
 
 	if (isset($_POST['submit'])) {

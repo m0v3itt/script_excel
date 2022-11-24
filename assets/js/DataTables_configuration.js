@@ -1,7 +1,7 @@
-$(document).ready( function () {
+
     $('#example').DataTable({
         "ordering": false,
-        "lengthMenu": [100],
+        "lengthMenu": [25,100],
         language:{
             lengthMenu: false,
             zeroRecords: "Não existem resultados",
@@ -16,4 +16,3 @@ $(document).ready( function () {
             }
         }
     });
-} );

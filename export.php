@@ -89,6 +89,7 @@ if ($_SESSION['admin'] == 0) {
 									array_push($ArrayDias, $dia);
 									$x++;	
 								}
+								json_encode($ArrayDias);
 								//Gerar código para a escala
 								$PrimeiraDataCodigo = $ArrayDias[0];
 								$SegundaDataCodigo = end($ArrayDias);
@@ -105,25 +106,47 @@ if ($_SESSION['admin'] == 0) {
 						<tbody>	
 					<?php
 						$query = 'SELECT * FROM tb_praia';
-						$result = $db->select($query);			
+						$result = $db->select($query);
+									
 						foreach($result as $row)
 						{
 							$id_praia = $row['id_praia'];
 							$nome_praia = $row['nome_praia'];
 							$turno = $row['turno'];
-
+						
 							?>
+							
 							<tr id="<?php $id_praia; ?>">
 							<td> <?php echo $id_praia; ?></td>
 							<td><?php echo $nome_praia; ?> </td>
 							<td><?php echo $turno; ?></td>
 							<?php for ($i = 0;$i < $x;$i++)
 							{
+								$query = "SELECT * FROM tb_escala 
+								inner join tb_nadadores on tb_escala.id_nadador=tb_nadadores.id_nadador
+								where id_dia ='$ArrayIdDias[$i]' and  id_praia = '$id_praia' and turno = '$turno'"; 
+								$result = $db->select($query);
+								
+								if ($db->getRecordCount($query)>0){
+									
+									echo '<td>';
+									echo '<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px" data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'&codigo='.$codigo.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'" data-codigo="'.$codigo.'"  multiple>';
+									foreach($result as $row){
+
+									echo '<option value=' .$row['id_nadador'].'  selected>'.$row['nome'].'</option>';
+									
+								}
+								echo '</select>';
+								}
+								
+								else{
 								echo (
 									'<td>
 									<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px" data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'&codigo='.$codigo.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'" data-codigo="'.$codigo.'"  multiple></select>
-									<br>'
-									);		
+									<br>
+									</td>'
+									);	
+								}
 								
 							}
 						}

@@ -57,11 +57,12 @@ if (isset($_POST["import"])) {
             preg_match('/\(([A-Za-z0-9 ]+?)\)/', $nome, $out);
             $codigo=$out[1];
             $nadador=preg_replace("/\([^)]+\)/","",$nome);
-            $query = "insert into tb_nadadores(id_nadador,nome) values(?,?)";
-            $paramType = "is";
+            $query = "insert into tb_nadadores(id_nadador,nome,preferencia) values(?,?,?)";
+            $paramType = "iss";
             $paramArray = array(
                 $codigo,
-                $nadador
+                $nadador,
+                $preference
 
             );
 
@@ -89,11 +90,10 @@ if (isset($_POST["import"])) {
                  $id_dia=$res['id_dia'];
                  }
 
-                 $query = "insert into tb_disponibilidade(preferencias,Manhã,Tarde,id_nadador,id_dia) values(?,?,?,?,?)";
+                 $query = "insert into tb_disponibilidade(manha,tarde,id_nadador,id_dia) values(?,?,?,?)";
                  
-                 $paramType = "siiii";
+                 $paramType = "iiii";
                  $paramArray = array(
-                 $preference,
                  $id_manha,
                  $id_tarde,
                  $codigo,
