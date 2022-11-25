@@ -27,7 +27,7 @@
 		function htmlToCSV(html, filename) {
 			var data = [];
 			var rows = document.querySelectorAll("table tr");
-					
+			console.log(rows)
 			for (var i = 0; i < rows.length; i++) {
 				var row = [], cols = rows[i].querySelectorAll("td, th");
 						
@@ -35,8 +35,8 @@
 				        row.push(cols[j].innerText);
 		                 }
 				        
-				data.push(row.join(","));		
+				data.push(row.join(";"));		
 			}
-
 			downloadCSVFile(data.join("\n"), filename);
+			
 		}

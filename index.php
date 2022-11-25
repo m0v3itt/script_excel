@@ -31,6 +31,9 @@
     <div class="div5"> 
         <a href="export.php"><p>Exportar</p> </a> 
     </div>
+    <div class="div6"> 
+        <a href="nadadores.php"><p>Nadadores</p> </a> 
+    </div>
     </div>
     
 </body>

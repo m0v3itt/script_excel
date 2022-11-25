@@ -20,6 +20,7 @@ if (isset($_POST["import"])) {
     mysqli_query($conn, "TRUNCATE TABLE `tb_dias`");
     mysqli_query($conn, "TRUNCATE TABLE `tb_nadadores`");
     mysqli_query($conn, "TRUNCATE TABLE `tb_disponibilidade`");
+    mysqli_query($conn, "TRUNCATE TABLE `tb_escala`");
     mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=1 ");
     if (in_array($_FILES["file"]["type"], $allowedFileType)) {
 
@@ -90,7 +91,7 @@ if (isset($_POST["import"])) {
                  $id_dia=$res['id_dia'];
                  }
 
-                 $query = "insert into tb_disponibilidade(manha,tarde,id_nadador,id_dia) values(?,?,?,?)";
+                 $query = "insert into tb_disponibilidade(Manhã,Tarde,id_nadador,id_dia) values(?,?,?,?)";
                  
                  $paramType = "iiii";
                  $paramArray = array(

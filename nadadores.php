@@ -67,8 +67,8 @@ if ($_SESSION['admin'] == 0) {
 								<thead>
 									<tr>
 									<th>Id</th>
-									<th>Nome Praia</th>
-									<th>Turno</th>'
+									<th>Nadador</th>
+									<th>Preferências</th>'
 							);
 							// Selecionar os dias que vão aparecer na tabela
 								if (isset($_POST["submeter"]))
@@ -98,64 +98,51 @@ if ($_SESSION['admin'] == 0) {
 									array_push($ArrayDias, $dia);
 									$x++;	
 								}
-								json_encode($ArrayDias);
-								//Gerar código para a escala
-								$PrimeiraDataCodigo = $ArrayDias[0];
-								$SegundaDataCodigo = end($ArrayDias);
-								$codigo = "Escala_".$PrimeiraDataCodigo."_".$SegundaDataCodigo;
-								$query = "insert into tb_historico(codigo) values(?)";
-									$paramType = "s";
-									$paramArray = array(
-										$codigo
-									);
-									$insertId = $db->insert($query, $paramType, $paramArray);
 						 ?>
 								</tr>
 							</thead>
 						<tbody>	
 					<?php
-						$query = 'SELECT * FROM tb_praia';
-						$result = $db->select($query);
-									
-						foreach($result as $row)
-						{
-							$id_praia = $row['id_praia'];
-							$nome_praia = $row['nome_praia'];
-							$turno = $row['turno'];
-						
-							?>
-							
-							<tr id="<?php $id_praia; ?>">
-							<td> <?php echo $id_praia; ?></td>
-							<td><?php echo $nome_praia; ?> </td>
-							<td><?php echo $turno; ?></td>
+						$query = 'SELECT * FROM tb_nadadores 
+                        ';
+                        $result = $db->select($query);
+                                    
+                        foreach($result as $row){   
+                            $id_nadador = $row['id_nadador'];
+                            $nome_nadador = $row['nome'];
+                            $preferenicas = $row['preferencia'];
+
+                            ?>
+                            
+                            <tr id="<?php $id_praia; ?>">
+                            <td> <?php echo $id_nadador; ?></td>
+                            <td> <?php echo $nome_nadador; ?></td>
+                            <td><?php echo $preferenicas; ?> </td>
 							<?php for ($i = 0;$i < $x;$i++)
 							{
-								$query = "SELECT * FROM tb_escala 
-								inner join tb_nadadores on tb_escala.id_nadador=tb_nadadores.id_nadador
-								where id_dia ='$ArrayIdDias[$i]' and  id_praia = '$id_praia' and turno = '$turno'"; 
-								$result = $db->select($query);
-								
-								if ($db->getRecordCount($query)>0){
-									
-									echo '<td>';
-									echo '<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px"  data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'&codigo='.$codigo.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'" data-codigo="'.$codigo.'"  multiple>';
-									foreach($result as $row){
+                                $query = " SELECT * FROM tb_disponibilidade 
+                                INNER JOIN tb_nadadores ON tb_nadadores.id_nadador=tb_disponibilidade.id_nadador
+                                WHERE id_dia = $ArrayIdDias[$i] and  tb_disponibilidade.id_nadador = $id_nadador ";
 
-									echo '<option value=' .$row['id_nadador'].'  selected>'.$row['nome'].'</option>';
-									
-								}
-								echo '</select>';
-								}
-								
-								else{
-								echo (
-									'<td>
-									<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px" data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'&codigo='.$codigo.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'" data-codigo="'.$codigo.'"  multiple></select>
-									<br>
-									</td>'
-									);	
-								}
+                                $result = $db->select($query);
+                                $turnoDoNadador='';
+                               echo '<td>';
+                                foreach($result as $row){
+                                    if($row['Manhã']==1 && $row['Tarde']==1){
+                                        echo 'Manhã Tarde';
+                                    }
+                                    
+                                    if($row['Manhã']==1){
+                                        echo  'Manhã';
+                                    }
+                                 
+                                     if($row['Tarde']==1){
+                                        echo 'Tarde';
+                                    }
+                                     
+                                }
+                                echo '</td>' ;
+                            }
 								
 							}
 						}
@@ -168,7 +155,7 @@ if ($_SESSION['admin'] == 0) {
 											<a href="export_to_excel.php" class="btn btn-submit btn-importar-2" role="button" aria-pressed="true">Exportar</a>
 											</div>'
 						);
-					}				
+									
 					?>
 					
 		  

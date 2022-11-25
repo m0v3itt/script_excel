@@ -4,25 +4,33 @@
 		ajax:{
 			processResults: function (data) {
 			// Transforms the top-level key of the response object from 'items' to 'results'
+			
 			return {
 				results: data,
-				tags: false
+			
+				
+				
       			};
     		}
 		}
+		
 	});
-
+	
 	$('.multiple-select').on('select2:select', function (e) {
+		console.log(e);
 		var  {id, text}  = e.params.data;
-		var { dia, praia, turno, codigo} = e.currentTarget.dataset
+		var { dia, praia, turno} = e.currentTarget.dataset
 
-		$.post('data.php', { dia, praia, id, turno , codigo})
+		$.post('data.php', { dia, praia, id, turno })
 	})
 
 	$('.multiple-select').on('select2:unselect', function (remove) {
 		var  {id}  = remove.params.data;
-		var { dia, praia, turno, codigo} = remove.currentTarget.dataset
-		$.post('remove.php',  { dia, praia, id, turno, codigo})
+		
+		var { dia, praia, turno} = remove.currentTarget.dataset
+		console.log(id,dia, praia, turno);
+		$.post('remove.php',  { dia, praia, id, turno})
+		
 	});
 
 	// $(document).ready(function() {
@@ -39,3 +47,5 @@
 
 
 
+								
+								
