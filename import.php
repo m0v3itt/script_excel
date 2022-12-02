@@ -16,14 +16,20 @@ if (isset($_POST["import"])) {
         'text/xlsx',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ];
-    mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=0 ");
-    mysqli_query($conn, "TRUNCATE TABLE `tb_dias`");
-    mysqli_query($conn, "TRUNCATE TABLE `tb_nadadores`");
-    mysqli_query($conn, "TRUNCATE TABLE `tb_disponibilidade`");
-    mysqli_query($conn, "TRUNCATE TABLE `tb_escala`");
-    mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=1 ");
+    // mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=0 ");
+    // mysqli_query($conn, "TRUNCATE TABLE `tb_dias`");
+    // mysqli_query($conn, "TRUNCATE TABLE `tb_nadadores`");
+    // mysqli_query($conn, "TRUNCATE TABLE `tb_disponibilidade`");
+    // mysqli_query($conn, "TRUNCATE TABLE `tb_escala`");
+    // mysqli_query($conn, "TRUNCATE TABLE `tb_historico`");
+    // mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=1 ");
     if (in_array($_FILES["file"]["type"], $allowedFileType)) {
-
+        $flag = 0;
+        if($flag == 0){
+        $query = 'UPDATE tb_dias set estado=0';
+		$result = $db->select($query);
+        }	
+        $flag=1;				
         $targetPath = 'uploads/' . $_FILES['file']['name'];
         move_uploaded_file($_FILES['file']['tmp_name'], $targetPath);
 
@@ -35,20 +41,31 @@ if (isset($_POST["import"])) {
         $header = $spreadSheetAry[0];
         //compara os index ao longo das rows
         $days= array_slice($header, 2);
-
+        $primeiroDia = $days[0];
+        $ultimoDia = end($days);
+        $escala = "De_".$primeiroDia."_A_".$ultimoDia;
         // insere os dias
         foreach($days as $day){
           
-            $query = "insert into tb_dias(dia) values(?)";
-            $paramType = "s";
+            $query = "insert into tb_dias(dia,estado) values(?,?)";
+            $paramType = "si";
             $paramArray = array(
-                $day
+                $day,
+                1
             );
             $insertId = $db->insert($query, $paramType, $paramArray);
         }
 
         $content = array_slice($spreadSheetAry, 1);
-
+        $query = "insert into tb_historico(escala,data1,data2) values(?,?,?)";
+                 
+                 $paramType = "sss";
+                 $paramArray = array(
+                 $escala,
+                 $primeiroDia,
+                 $ultimoDia
+                 );
+                 $insertId=$db->insert($query,$paramType,$paramArray);
 
         // insere os os nadadores e os respetivos ids
         foreach($content as $row) {

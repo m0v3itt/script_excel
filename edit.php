@@ -26,6 +26,9 @@ if ($_SESSION['admin'] == 0) {
 		
 		<form  method="POST">
 			<?php
+
+				 if( isset($_GET['data1']) && isset($_GET['data2']) ){
+					
 				 
 						echo ( 
 							'<table class="table table-bordered table-striped" id="example">
@@ -38,16 +41,8 @@ if ($_SESSION['admin'] == 0) {
 							// Selecionar os dias que vão aparecer na tabela
 								
 								
-									$um = $_SESSION['dia1'];
-									$dois = $_SESSION['dia2'];
-									$query = 'SELECT * FROM tb_dias where id_dia between ? and ? ';
-									$paramType = 'ii';
-									$paramValue = array(
-										$um,
-										$dois
-									);
-									$result = $db->select($query,$paramType,$paramValue);
-								
+								$query = "SELECT * from tb_dias where dia between '$_GET[data1]' and '$_GET[data2]' ";
+								$result = $db->select($query);
 								$x = 0;
 								$ArrayIdDias = array();
 								$ArrayDias = array();
@@ -60,17 +55,7 @@ if ($_SESSION['admin'] == 0) {
 									array_push($ArrayDias, $dia);
 									$x++;	
 								}
-								json_encode($ArrayDias);
-								//Gerar código para a escala
-								$PrimeiraDataCodigo = $ArrayDias[0];
-								$SegundaDataCodigo = end($ArrayDias);
-								$codigo = "Escala_".$PrimeiraDataCodigo."_".$SegundaDataCodigo;
-								$query = "insert into tb_historico(codigo) values(?)";
-									$paramType = "s";
-									$paramArray = array(
-										$codigo
-									);
-									$insertId = $db->insert($query, $paramType, $paramArray);
+								
 						 ?>
 								</tr>
 							</thead>
@@ -173,7 +158,7 @@ if ($_SESSION['admin'] == 0) {
 
 											
 						);
-						
+					}
 					?>
 					
 		  

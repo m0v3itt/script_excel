@@ -23,7 +23,7 @@ if ($_SESSION['admin'] == 0) {
 					<form  method="post" name="rangee">
 						<?php
 							// escolher os dias que vão aparecer na tabela
-							$query = 'SELECT * FROM tb_dias ';
+							$query = 'SELECT * FROM tb_dias where estado=1 ';
 							$result = $db->select($query);
 							
 							echo "<select name='dia1' size='1' class='form-select form-select-sm'>";
@@ -37,7 +37,7 @@ if ($_SESSION['admin'] == 0) {
 						?> 
 							</select>
 						<?php
-							$query = 'SELECT * FROM tb_dias ';
+							$query = 'SELECT * FROM tb_dias where estado=1 ';
 							$result = $db->select($query);
 							echo "<select name='dia2' size='1' class='form-select form-select-sm'>";
 							echo "<option value='' disabled selected hidden> A </option>";
@@ -48,7 +48,6 @@ if ($_SESSION['admin'] == 0) {
 								echo "<option value=$id2>$dia2</option>";
 							}
 
-							$data = "Escala"
 						?> 
 							</select>
 						<button type="submit" name="submeter" class="btn-submit btn-importar"> Enviar </button>                         
@@ -75,6 +74,7 @@ if ($_SESSION['admin'] == 0) {
 								{
 									
 									$um = $_POST['dia1'];
+									
 									$dois = $_POST['dia2'];
 									$_SESSION['dia1'] = $um;
 									$_SESSION['dia2'] = $dois;
@@ -100,15 +100,7 @@ if ($_SESSION['admin'] == 0) {
 								}
 								json_encode($ArrayDias);
 								//Gerar código para a escala
-								$PrimeiraDataCodigo = $ArrayDias[0];
-								$SegundaDataCodigo = end($ArrayDias);
-								$codigo = "Escala_".$PrimeiraDataCodigo."_".$SegundaDataCodigo;
-								$query = "insert into tb_historico(codigo) values(?)";
-									$paramType = "s";
-									$paramArray = array(
-										$codigo
-									);
-									$insertId = $db->insert($query, $paramType, $paramArray);
+							
 						 ?>
 								</tr>
 							</thead>
@@ -139,7 +131,7 @@ if ($_SESSION['admin'] == 0) {
 								if ($db->getRecordCount($query)>0){
 									
 									echo '<td>';
-									echo '<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px"  data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'&codigo='.$codigo.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'" data-codigo="'.$codigo.'"  multiple>';
+									echo '<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px"  data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'"  multiple>';
 									foreach($result as $row){
 
 									echo '<option value=' .$row['id_nadador'].'  selected>'.$row['nome'].'</option>';
@@ -151,7 +143,7 @@ if ($_SESSION['admin'] == 0) {
 								else{
 								echo (
 									'<td>
-									<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px" data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'&codigo='.$codigo.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'" data-codigo="'.$codigo.'"  multiple></select>
+									<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px" data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'"  multiple></select>
 									<br>
 									</td>'
 									);	

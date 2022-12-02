@@ -125,36 +125,33 @@ if ($_SESSION['admin'] == 0) {
                                 WHERE id_dia = $ArrayIdDias[$i] and  tb_disponibilidade.id_nadador = $id_nadador ";
 
                                 $result = $db->select($query);
-                                $turnoDoNadador='';
-                               echo '<td>';
+                                if ($db->getRecordCount($query)>0){
+                              	 echo '<td>';
                                 foreach($result as $row){
                                     if($row['Manhã']==1 && $row['Tarde']==1){
                                         echo 'Manhã Tarde';
                                     }
                                     
-                                    if($row['Manhã']==1){
+                                    if($row['Manhã']==1 and $row['Tarde']==0 ){
                                         echo  'Manhã';
                                     }
                                  
-                                     if($row['Tarde']==1){
+                                     if($row['Tarde']==1 and $row['Manhã']==0){
                                         echo 'Tarde';
                                     }
                                      
                                 }
-                                echo '</td>' ;
+								echo '</td>' ;
+							}
+							else{
+								echo '<td>  </td>';
+							}
+                                
                             }
 								
 							}
 						}
-						echo (
-							'</tr>
-							</tbody>
-								</table>
-										</form>
-											<div class="centrar-botao">
-											<a href="export_to_excel.php" class="btn btn-submit btn-importar-2" role="button" aria-pressed="true">Exportar</a>
-											</div>'
-						);
+
 									
 					?>
 					
