@@ -46,9 +46,22 @@ if (isset($_POST["submit"])) {
                 <button type="submit" name="submit">Enviar</button>
             </form>
         </div>
+<<<<<<< HEAD
     
+=======
+    </form>
+>>>>>>> f3b9eac9e21985634a094c040ac0264dd6d9c2df
     </div>
 
+<<<<<<< HEAD
+=======
+    <script>
+    function resetFile() {
+        const file = document.querySelector('.file');
+        file.value = '';
+    }
+    </script>
+>>>>>>> f3b9eac9e21985634a094c040ac0264dd6d9c2df
 </body>
 
 </html>

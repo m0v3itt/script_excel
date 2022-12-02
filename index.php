@@ -4,16 +4,23 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     
     <link rel="stylesheet" href="assets/css/style.css">
     
+=======
+    <link rel="stylesheet" href="assets/css/style.css">
+>>>>>>> f3b9eac9e21985634a094c040ac0264dd6d9c2df
     <title>Document</title>
 </head>
 <body>
     <img src="assets/images/summer.png">
+<<<<<<< HEAD
 
    <a href="logout.php"><button>LOG OUT</button></a>
 
+=======
+>>>>>>> f3b9eac9e21985634a094c040ac0264dd6d9c2df
     <h1>BEM-VINDO!</h1>
     <div class="parent">
         <div class="div1">
