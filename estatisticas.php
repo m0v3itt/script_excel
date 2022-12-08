@@ -34,6 +34,18 @@ if ($_SESSION['admin'] == 0) {
         </tr>
         </thead>
             <?php
+            if (isset($_GET['data1']) && isset($_GET['data2'])){
+                $query = "SELECT * FROM tb_dias where dia = '$_GET[data1]'";
+                $result = $db->select($query);
+                foreach($result as $row){
+                    $diaUm = $row['id_dia'];
+                }
+                $query = "SELECT * FROM tb_dias where dia = '$_GET[data2]'";
+                $result = $db->select($query);
+                foreach($result as $row){
+                    $diaDois = $row['id_dia'];
+                }    
+
             $query = " SELECT * FROM tb_nadadores";
                 $result = $db->select($query);
                 if ($db->getRecordCount($query)>0){
@@ -42,7 +54,7 @@ if ($_SESSION['admin'] == 0) {
                         echo '<th>'.'('.$re['id_nadador'].')'.$re['nome'].'</td>';
                         $query = "SELECT id_nadador,
                         COUNT(*) AS Manhas FROM
-                        tb_disponibilidade WHERE Manhã = 1 AND id_nadador=$re[id_nadador];";
+                        tb_disponibilidade WHERE Manhã = 1 AND id_nadador=$re[id_nadador] and id_dia between $diaUm and $diaDois;";
                         $result = $db->select($query);
                             foreach($result as $row){
                                 $manhaDisponibilidade = $row['Manhas'];
@@ -50,7 +62,7 @@ if ($_SESSION['admin'] == 0) {
                             }
                         $query = "SELECT id_nadador,
                         COUNT(*) AS Tardes
-                        FROM tb_disponibilidade WHERE Tarde = 1  AND id_nadador=$re[id_nadador]"; 
+                        FROM tb_disponibilidade WHERE Tarde = 1  AND id_nadador=$re[id_nadador] and id_dia between $diaUm and $diaDois"; 
                         $result = $db->select($query);
                             foreach($result as $ro){
                                 $tardesDisponibilidade = $ro['Tardes'];
@@ -58,7 +70,7 @@ if ($_SESSION['admin'] == 0) {
                             }
                         $query = "SELECT id_nadador,
                         COUNT(*) AS Manhas
-                        FROM tb_escala WHERE Turno = 'Manhã'  AND id_nadador=$re[id_nadador]"; 
+                        FROM tb_escala WHERE Turno = 'Manhã'  AND id_nadador=$re[id_nadador] and id_dia between $diaUm and $diaDois"; 
                         $result = $db->select($query);
                             foreach($result as $r){
                                 $manhasTrabalhadas = $r['Manhas'];
@@ -66,7 +78,7 @@ if ($_SESSION['admin'] == 0) {
                             }
                         $query = "SELECT id_nadador,
                         COUNT(*) AS Tardes
-                        FROM tb_escala WHERE Turno = 'Tarde'  AND id_nadador=$re[id_nadador]"; 
+                        FROM tb_escala WHERE Turno = 'Tarde'  AND id_nadador=$re[id_nadador] and id_dia between $diaUm and $diaDois"; 
                         $result = $db->select($query);
                             foreach($result as $rol){
                                 $tardesTrabalhadas = $rol['Tardes'];
@@ -78,6 +90,7 @@ if ($_SESSION['admin'] == 0) {
                         echo '<td>'.$tardesDiferenca.'</td>';                       
                     }  
                 }
+            }
             ?>
 
     </table>

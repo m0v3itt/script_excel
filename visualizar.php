@@ -26,6 +26,9 @@ if ($_SESSION['admin'] == 0) {
 		
 		<form  method="POST">
 			<?php
+
+				 if( isset($_GET['data1']) && isset($_GET['data2']) ){
+					
 				 
 						echo ( 
 							'<table class="table table-bordered table-striped" id="example">
@@ -36,23 +39,25 @@ if ($_SESSION['admin'] == 0) {
 									<th>Turno</th>'
 							);
 							// Selecionar os dias que vão aparecer na tabela
-								
-								
-									$um = $_SESSION['dia1'];
-									$dois = $_SESSION['dia2'];
-									$query = 'SELECT * FROM tb_dias where id_dia between ? and ? ';
-									$paramType = 'ii';
-									$paramValue = array(
-										$um,
-										$dois
-									);
-									$result = $db->select($query,$paramType,$paramValue);
-								
+								$query = "SELECT * FROM tb_dias where dia = '$_GET[data1]'";
+								$result = $db->select($query);
+								foreach($result as $row){
+									$diaUm = $row['id_dia'];
+								}
+								$query = "SELECT * FROM tb_dias where dia = '$_GET[data2]'";
+								$result = $db->select($query);
+								foreach($result as $row){
+									$diaDois = $row['id_dia'];
+								}
+
+								$query = "SELECT * from tb_dias where id_dia between '$diaUm' and '$diaDois' ";
+								$result = $db->select($query);
 								$x = 0;
 								$ArrayIdDias = array();
 								$ArrayDias = array();
 								foreach($result as $row)
 								{
+									
 									echo "<th>" . $row['dia'] . "</th>";
 									$dia = $row['dia'];
 									$id_dia = $row['id_dia'];
@@ -163,7 +168,7 @@ if ($_SESSION['admin'] == 0) {
 
 											
 						);
-						
+					}
 					?>
 					
 		  
