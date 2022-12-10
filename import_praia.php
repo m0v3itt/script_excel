@@ -37,6 +37,7 @@ if (isset($_POST["submit"])) {
 ?>
 
 <body>
+<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
     <div class="fullscreen table-cell valign-middle text-center">
         <h1 class="import-h1">Inserir praia</h1>
         <div class="importar container">

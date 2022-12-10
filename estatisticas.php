@@ -12,6 +12,9 @@ if ($_SESSION['admin'] == 0) {
 }
 ?>
 <body>
+<a href="historico.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
+<br>
+<br>
     <table class="table table-bordered " id="tabela">
         <col>
         <col>
@@ -98,7 +101,8 @@ if ($_SESSION['admin'] == 0) {
     $(document).ready( function () {
         $('#tabela').DataTable( {
             dom: 'Bfrtip',
-            buttons: ['excel']
+            buttons: ['excel'],
+            className: 'btn btn-default btn-sm'
         } );
     } );
 

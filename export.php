@@ -1,8 +1,8 @@
 <?php
 use Phppot\DataSource;
 include_once ("db_connect.php");
-include ("header.php");
 require_once 'DataSource.php';
+include('header.php');
 $db = new DataSource();
 $conn = $db->getConnection();
 if ($_SESSION['admin'] == 0) {
@@ -12,12 +12,9 @@ if ($_SESSION['admin'] == 0) {
 }
 
 ?>
-	<body>
-		
-		<br>
 
+		<section class="home">
 		<div class="valign-middle text-center">
-		<a href="index.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
         	<h1 class="import-h1">INSIRA AS DATAS</h1>
         		<div class="importar container">	
 					<form  method="post" name="rangee">
@@ -30,7 +27,7 @@ if ($_SESSION['admin'] == 0) {
 							echo "<option value='' disabled selected hidden> De </option>";
 							foreach($result as $row){
 								echo $row['dia'];
-								$dia1 = $row['dia'];
+								$dia1 = date("d/m/Y", strtotime($row['dia']));
 								$id1 = $row['id_dia'];
 								echo "<option value=$id1>$dia1</option>";
 							}
@@ -43,7 +40,7 @@ if ($_SESSION['admin'] == 0) {
 							echo "<option value='' disabled selected hidden> A </option>";
 							foreach($result as $row)
 							{
-								$dia2 = $row['dia'];
+								$dia2 = date("d/m/Y", strtotime($row['dia']));
 								$id2 = $row['id_dia'];
 								echo "<option value=$id2>$dia2</option>";
 							}
@@ -88,7 +85,8 @@ if ($_SESSION['admin'] == 0) {
 								$ArrayDias = array();
 								foreach($result as $row)
 								{
-									echo "<th>" . $row['dia'] . "</th>";
+									$dias = date("d/m/Y", strtotime($row['dia']));
+									echo "<th>" . $dias . "</th>";
 									$dia = $row['dia'];
 									$id_dia = $row['id_dia'];
 									array_push($ArrayIdDias, $id_dia);
@@ -157,12 +155,16 @@ if ($_SESSION['admin'] == 0) {
 											<div class="centrar-botao">
 											<a href="visualizar.php?data1='. $data1 .'&data2='.$data2.'" class="btn btn-submit btn-importar-2" role="button" aria-pressed="true">Exportar</a>
 
-											</div>'
+											</div>
+											</section>'
+										
 						);
 					}				
 					?>
 					
-		  
+					<script src="assets/js/jquery-3.6.1.min.js"></script>
+		<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-html5-2.3.3/datatables.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>  	  
 <script src="assets/js/DataTables_configuration.js"></script>
 <script src="assets/js/select2_configurations.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

@@ -17,7 +17,7 @@ if ($_SESSION['admin'] == 0) {
 		<br>
 
 		<div class="valign-middle text-center">
-		<a href="index.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
+		<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
         	<h1 class="import-h1">INSIRA AS DATAS</h1>
         		<div class="importar container">	
 					<form  method="post" name="rangee">
@@ -40,8 +40,7 @@ if ($_SESSION['admin'] == 0) {
 							echo "<select name='dia1' size='1' class='form-select form-select-sm'>";
 							echo "<option value='' disabled selected hidden> De </option>";
 							foreach($result as $row){
-								echo $row['dia'];
-								$dia1 = $row['dia'];
+								$dia1 = date("d/m/Y", strtotime($row['dia']));
 								$id1 = $row['id_dia'];
 								echo "<option value=$id1>$dia1</option>";
 							}
@@ -54,7 +53,7 @@ if ($_SESSION['admin'] == 0) {
 							echo "<option value='' disabled selected hidden> A </option>";
 							foreach($result as $row)
 							{
-								$dia2 = $row['dia'];
+								$dia2 = date("d/m/Y", strtotime($row['dia']));
 								$id2 = $row['id_dia'];
 								echo "<option value=$id2>$dia2</option>";
 							}
@@ -99,7 +98,8 @@ if ($_SESSION['admin'] == 0) {
 								$ArrayDias = array();
 								foreach($result as $row)
 								{
-									echo "<th>" . $row['dia'] . "</th>";
+									$dias = date("d/m/Y", strtotime($row['dia']));
+									echo "<th>" . $dias . "</th>";
 									$dia = $row['dia'];
 									$id_dia = $row['id_dia'];
 									array_push($ArrayIdDias, $id_dia);

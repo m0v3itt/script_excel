@@ -17,7 +17,7 @@ if ($_SESSION['admin'] == 0) {
 		
 
 		<div class="valign-middle text-center">
-		<a href="index.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
+		<a href="historico.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
         	<h1 class="import-h1">VISÃO GERAL DA ESCALA</h1>
         		<div class="importar container">	
 				
@@ -28,7 +28,8 @@ if ($_SESSION['admin'] == 0) {
 			<?php
 
 				 if( isset($_GET['data1']) && isset($_GET['data2']) ){
-					
+					$data1 = $_GET['data1'];
+					$data2 = $_GET['data2'];
 				 
 						echo ( 
 							'<table class="table table-bordered table-striped" id="example">
@@ -57,8 +58,8 @@ if ($_SESSION['admin'] == 0) {
 								$ArrayDias = array();
 								foreach($result as $row)
 								{
-									
-									echo "<th>" . $row['dia'] . "</th>";
+									$dias = date("d/m/Y", strtotime($row['dia']));
+									echo "<th>" . $dias . "</th>";
 									$dia = $row['dia'];
 									$id_dia = $row['id_dia'];
 									array_push($ArrayIdDias, $id_dia);
@@ -162,7 +163,7 @@ if ($_SESSION['admin'] == 0) {
 										</form>
 										<div class="centrar-botao">
 										<a href="export_to_excel.php" class="btn btn-submit btn-importar-2" id="download-button" role="button" aria-pressed="true">Exportar</a>
-										<a href="export.php" class="btn btn-submit btn-importar-2"  role="button" aria-pressed="true">Editar</a>
+										<a href="edit.php?data1='.  $data1.'&data2='.$data2.'" class="btn btn-submit btn-importar-2"  role="button" aria-pressed="true">Editar</a>
 									
 										</div>'
 

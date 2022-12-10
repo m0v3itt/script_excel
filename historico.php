@@ -3,6 +3,7 @@ use Phppot\DataSource;
 include_once ("db_connect.php");
 include ("header.php");
 require_once 'DataSource.php';
+include("main.php");
 $db = new DataSource();
 $conn = $db->getConnection();
 if ($_SESSION['admin'] == 0) {
@@ -12,6 +13,11 @@ if ($_SESSION['admin'] == 0) {
 }
 ?>
 <body>
+<br>
+<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
+<br>
+<br>
+<br>
 <table class="table table-bordered " id="tabela">
         <thead>
         <tr>
@@ -26,7 +32,7 @@ if ($_SESSION['admin'] == 0) {
                 <?php
                 $query = "SELECT * from tb_historico";
                 $result = $db->select($query);
-     
+                if (count($result) > 0) {
                 for($i=0; $i<count($result); $i++){
                     
                    $data1 = $result[$i]['data1'];
@@ -69,7 +75,10 @@ if ($_SESSION['admin'] == 0) {
 
                   
                 }
-                
+            }
+            else{
+                echo "Não há resultados";
+            }
                
                ?>
             

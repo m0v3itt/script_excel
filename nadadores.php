@@ -17,7 +17,7 @@ if ($_SESSION['admin'] == 0) {
 		<br>
 
 		<div class="valign-middle text-center">
-		<a href="index.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
+		<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
         	<h1 class="import-h1">INSIRA AS DATAS</h1>
         		<div class="importar container">	
 					<form  method="post" name="rangee">

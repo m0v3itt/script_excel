@@ -3,7 +3,7 @@
 	function downloadCSVFile(csv, filename) {
 	    var csv_file, download_link;
 
-	    csv_file = new Blob([csv], {type: "text/csv"});
+	    csv_file = new Blob([ csv], { type: 'text/csv;charset=utf-8' });
 
 	    download_link = document.createElement("a");
 
@@ -12,7 +12,7 @@
 	    download_link.href = window.URL.createObjectURL(csv_file);
 
 	    download_link.style.display = "none";
-
+		document_link.
 	    document.body.appendChild(download_link);
 
 	    download_link.click();
@@ -20,6 +20,7 @@
 
 		document.getElementById("download-button").addEventListener("click", function () {
 		    var html = document.querySelector("table").outerHTML;
+		
 			htmlToCSV(html, "Horario_Definido.csv");
 		});
 

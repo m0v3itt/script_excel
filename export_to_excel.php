@@ -17,7 +17,7 @@ if ($_SESSION['admin'] == 0) {
 		
 
 		<div class="valign-middle text-center">
-		<a href="index.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
+		<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
         	<h1 class="import-h1">VISÃO GERAL DA ESCALA</h1>
         		<div class="importar container">	
 				
