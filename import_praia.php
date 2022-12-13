@@ -6,185 +6,50 @@ require_once 'DataSource.php';
 $db = new DataSource();
 $conn = $db->getConnection();
 require_once ('./vendor/autoload.php');
+include("header.php");
 
-if (isset($_POST["import"])) {
-
-    $allowedFileType = [
-        'application/vnd.ms-excel',
-        'text/xls',
-        'text/xlsx',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    ];
-    mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=0 ");
-    mysqli_query($conn, "TRUNCATE TABLE `tb_praia`");
- 
-    mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=1 ");
-    if (in_array($_FILES["file"]["type"], $allowedFileType)) {
-
-        $targetPath = 'uploads/' . $_FILES['file']['name'];
-        move_uploaded_file($_FILES['file']['tmp_name'], $targetPath);
-
-        $Reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-
-        $spreadSheet = $Reader->load($targetPath);
-        $excelSheet = $spreadSheet->getActiveSheet();
-        $spreadSheetAry = $excelSheet->toArray();
-
-        $header = $spreadSheetAry[0];
-        //compara os index ao longo das rows
-        $days= array_slice($header, 2);
-        $content = array_slice($spreadSheetAry, 1);
-
-
-        // insere os os nadadores e os respetivos ids
-        foreach($content as $row) {
-            $praia = $row[0];
-            $turno = $row[1];
+if (isset($_POST["submit"])) {
+    $nome_praia = $_POST['nome_praia'];
+    for($i=0;$i<2;$i++){
+        if($i%2==0){
             $query = "insert into tb_praia(nome_praia,turno) values(?,?)";
             $paramType = "ss";
             $paramArray = array(
-                $praia,
-                $turno
-
+                $nome_praia,
+                'Manhã',
             );
-
-            
-
             $insertId = $db->insert($query, $paramType, $paramArray);
-
-                
+        }
+        else{
+            $query = "insert into tb_praia(nome_praia,turno) values(?,?)";
+            $paramType = "ss";
+            $paramArray = array(
+                $nome_praia,
+                'Tarde',
+            );
+            $insertId = $db->insert($query, $paramType, $paramArray);
+        }
     }
-    }
+    
+    
+    
 }
 ?>
-
-<!DOCTYPE html>
-<html>
-
-<head>
-    <style>
-    body {
-        font-family: Arial;
-        width: 550px;
-    }
-
-    .outer-container {
-        background: #F0F0F0;
-        border: #e0dfdf 1px solid;
-        padding: 40px 20px;
-        border-radius: 2px;
-    }
-
-    .btn-submit {
-        background: #333;
-        border: #1d1d1d 1px solid;
-        border-radius: 2px;
-        color: #f0f0f0;
-        cursor: pointer;
-        padding: 5px 20px;
-        font-size: 0.9em;
-    }
-
-    .tutorial-table {
-        margin-top: 40px;
-        font-size: 0.8em;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    .tutorial-table th {
-        background: #f0f0f0;
-        border-bottom: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    .tutorial-table td {
-        background: #FFF;
-        border-bottom: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    #response {
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 2px;
-        display: none;
-    }
-
-    .success {
-        background: #c7efd9;
-        border: #bbe2cd 1px solid;
-    }
-
-    .error {
-        background: #fbcfcf;
-        border: #f3c6c7 1px solid;
-    }
-
-    div#response.display-block {
-        display: block;
-    }
-    </style>
-</head>
 
 <body>
-    <h2>Import Excel File into MySQL Database using PHP</h2>
-
-    <div class="outer-container">
-        <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
-            <div>
-                <label>Choose Excel File</label> <input type="file" name="file" id="file" accept=".xls,.xlsx">
-                <button type="submit" id="submit" name="import" class="btn-submit">Import</button>
-                <button onclick="resetFile()">Reset file</button>
-            </div>
-
-        </form>
-
+<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
+    <div class="fullscreen table-cell valign-middle text-center">
+        <h1 class="import-h1">Inserir praia</h1>
+        <div class="importar container">
+            <form action="" method="post">
+                <label>Nome da praia:</label>
+                <input type="text" name="nome_praia">
+                <button type="submit" name="submit">Enviar</button>
+            </form>
+        </div>
+    
     </div>
-    <div id="response" class="<?php if(!empty($type)) { echo $type . " display-block"; } ?>">
-        <?php if(!empty($message)) { echo $message; } ?></div>
 
-
-    <?php
-$sqlSelect = "SELECT * FROM tb_dias";
-$result = $db->select($sqlSelect);
-if (! empty($result)) {
-    ?>
-
-    <table class='tutorial-table'>
-        <thead>
-            <tr>
-                <th>Id_dia</th>
-                <th>Dia</th>
-            
-
-            </tr>
-        </thead>
-        <?php
-    foreach ($result as $row) { // ($row = mysqli_fetch_array($result))
-        ?>
-        <tbody>
-            <tr>
-                <td><?php  echo $row['id_dia']; ?></td>
-                <td><?php  echo $row['dia']; ?></td>
-
-            </tr>
-            <?php
-    }
-    ?>
-        </tbody>
-    </table>
-    <?php
-}
-?>
-    <script>
-    function resetFile() {
-        const file = document.querySelector('.file');
-        file.value = '';
-    }
-    </script>
 </body>
 
 </html>

@@ -6,6 +6,7 @@ require_once 'DataSource.php';
 $db = new DataSource();
 $conn = $db->getConnection();
 require_once ('./vendor/autoload.php');
+include("header.php");
 
 if (isset($_POST["import"])) {
 
@@ -15,12 +16,23 @@ if (isset($_POST["import"])) {
         'text/xlsx',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ];
+
     mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=0 ");
     mysqli_query($conn, "TRUNCATE TABLE `tb_dias`");
     mysqli_query($conn, "TRUNCATE TABLE `tb_nadadores`");
     mysqli_query($conn, "TRUNCATE TABLE `tb_disponibilidade`");
+    mysqli_query($conn, "TRUNCATE TABLE `tb_escala`");
+    mysqli_query($conn, "TRUNCATE TABLE `tb_historico`");
     mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=1 ");
+
+    $flag = 0;
     if (in_array($_FILES["file"]["type"], $allowedFileType)) {
+   
+        if($flag == 0){
+        $query = 'UPDATE tb_dias set estado=0';
+		$result = mysqli_query($conn, $query);
+        }	
+        $flag=1;		
 
         $targetPath = 'uploads/' . $_FILES['file']['name'];
         move_uploaded_file($_FILES['file']['tmp_name'], $targetPath);
@@ -33,20 +45,41 @@ if (isset($_POST["import"])) {
         $header = $spreadSheetAry[0];
         //compara os index ao longo das rows
         $days= array_slice($header, 2);
+  
 
+       
+        
         // insere os dias
+        $ArrayDias = array();
         foreach($days as $day){
-          
-            $query = "insert into tb_dias(dia) values(?)";
-            $paramType = "s";
+			array_push($ArrayDias, $day);
+            $query = "insert into tb_dias(dia,estado) values(?,?)";
+            $paramType = "si";
             $paramArray = array(
-                $day
+                $day,
+                1
             );
             $insertId = $db->insert($query, $paramType, $paramArray);
         }
 
+        $primeiroDia = $ArrayDias[0];
+        $ultimoDia = end($ArrayDias);
+        $escala = "De_".$primeiroDia."_A_".$ultimoDia;
+        $query = "insert into tb_historico(escala,data1,data2) values(?,?,?)";
+                 
+        $paramType = "sss";
+        $paramArray = array(
+        $escala,
+        $primeiroDia,
+        $ultimoDia
+        );
+        $insertId=$db->insert($query,$paramType,$paramArray);
+
+
         $content = array_slice($spreadSheetAry, 1);
 
+
+    
 
         // insere os os nadadores e os respetivos ids
         foreach($content as $row) {
@@ -56,11 +89,12 @@ if (isset($_POST["import"])) {
             preg_match('/\(([A-Za-z0-9 ]+?)\)/', $nome, $out);
             $codigo=$out[1];
             $nadador=preg_replace("/\([^)]+\)/","",$nome);
-            $query = "insert into tb_nadadores(id_nadador,nome) values(?,?)";
-            $paramType = "is";
+            $query = "insert into tb_nadadores(id_nadador,nome,preferencia) values(?,?,?)";
+            $paramType = "iss";
             $paramArray = array(
                 $codigo,
-                $nadador
+                $nadador,
+                $preference
 
             );
 
@@ -88,11 +122,10 @@ if (isset($_POST["import"])) {
                  $id_dia=$res['id_dia'];
                  }
 
-                 $query = "insert into tb_disponibilidade(preferencias,Manhã,Tarde,id_nadador,id_dia) values(?,?,?,?,?)";
+                 $query = "insert into tb_disponibilidade(Manhã,Tarde,id_nadador,id_dia) values(?,?,?,?)";
                  
-                 $paramType = "siiii";
+                 $paramType = "iiii";
                  $paramArray = array(
-                 $preference,
                  $id_manha,
                  $id_tarde,
                  $codigo,
@@ -109,202 +142,33 @@ if (isset($_POST["import"])) {
 ?>
 
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <style>
-    body {
-        font-family: Arial;
-        width: 550px;
-    }
-
-    .outer-container {
-        background: #F0F0F0;
-        border: #e0dfdf 1px solid;
-        padding: 40px 20px;
-        border-radius: 2px;
-    }
-
-    .btn-submit {
-        background: #333;
-        border: #1d1d1d 1px solid;
-        border-radius: 2px;
-        color: #f0f0f0;
-        cursor: pointer;
-        padding: 5px 20px;
-        font-size: 0.9em;
-    }
-
-    .tutorial-table {
-        margin-top: 40px;
-        font-size: 0.8em;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    .tutorial-table th {
-        background: #f0f0f0;
-        border-bottom: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    .tutorial-table td {
-        background: #FFF;
-        border-bottom: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    #response {
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 2px;
-        display: none;
-    }
-
-    .success {
-        background: #c7efd9;
-        border: #bbe2cd 1px solid;
-    }
-
-    .error {
-        background: #fbcfcf;
-        border: #f3c6c7 1px solid;
-    }
-
-    div#response.display-block {
-        display: block;
-    }
-    </style>
+    <?php include('header.php');?>
+    <title>Importar</title>
 </head>
-
 <body>
-    <h2>Import Excel File into MySQL Database using PHP</h2>
-
-    <div class="outer-container">
-        <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
-            <div>
-                <label>Choose Excel File</label> <input type="file" name="file" id="file" accept=".xls,.xlsx">
-                <button type="submit" id="submit" name="import" class="btn-submit">Import</button>
-                <button onclick="resetFile()">Reset file</button>
-            </div>
-
-        </form>
-
+<?php include('navbar.php') ?>
+<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
+    <div class="fullscreen table-cell valign-middle text-center">
+        <h1 class="import-h1">IMPORTAR FICHEIRO</h1>
+        <div class="importar container">
+            <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
+                <input type="file" name="file" id="file" class="btn-importar-custom" accept=".xls,.xlsx">
+                <button type="submit" id="submit" name="import" class="btn-submit btn-importar">Importar</button>
+                <button onclick="resetFile()" class="btn-importar">Limpar</button>
+        </div>
+  
+    </form>
     </div>
-    <div id="response" class="<?php if(!empty($type)) { echo $type . " display-block"; } ?>">
-        <?php if(!empty($message)) { echo $message; } ?></div>
-
-
-    <?php
-$sqlSelect = "SELECT * FROM tb_dias";
-$result = $db->select($sqlSelect);
-if (! empty($result)) {
-    ?>
-
-    <table class='tutorial-table'>
-        <thead>
-            <tr>
-                <th>Id_dia</th>
-                <th>Dia</th>
-            
-
-            </tr>
-        </thead>
-        <?php
-    foreach ($result as $row) { // ($row = mysqli_fetch_array($result))
-        ?>
-        <tbody>
-            <tr>
-                <td><?php  echo $row['id_dia']; ?></td>
-                <td><?php  echo $row['dia']; ?></td>
-
-            </tr>
-            <?php
-    }
-    ?>
-        </tbody>
-    </table>
-    <?php
-}
-?>
-<?php
-$sqlSelect = "SELECT * FROM tb_nadadores";
-$result = $db->select($sqlSelect);
-if (! empty($result)) {
-    ?>
-
-    <table class='tutorial-table'>
-        <thead>
-            <tr>
-                <th>Id_nadador</th>
-                <th>Nome</th>
-            
-
-            </tr>
-        </thead>
-        <?php
-    foreach ($result as $row) { // ($row = mysqli_fetch_array($result))
-        ?>
-        <tbody>
-            <tr>
-                <td><?php  echo $row['id_nadador']; ?></td>
-                <td><?php  echo $row['nome']; ?></td>
-
-            </tr>
-            <?php
-    }
-    ?>
-        </tbody>
-    </table>
-    <?php
-}
-?>
-<?php
-$sqlSelect = "SELECT * FROM tb_disponibilidade";
-$result = $db->select($sqlSelect);
-if (! empty($result)) {
-    ?>
-
-    <table class='tutorial-table'>
-        <thead>
-            <tr>
-                <th>Id_nadador</th>
-                <th>Manha</th>
-                <th>Tarde</th>
-                <th>id_dia</th>
-                <th>Preferências</th>
-            
-
-            </tr>
-        </thead>
-        <?php
-    foreach ($result as $row) { // ($row = mysqli_fetch_array($result))
-        ?>
-        <tbody>
-            <tr>
-                <td><?php  echo $row['id_nadador']; ?></td>
-                <td><?php  echo $row['Manhã']; ?></td>
-                <td><?php  echo $row['Tarde']; ?></td>
-                <td><?php  echo $row['id_dia']; ?></td>
-                <td><?php  echo $row['preferencias']; ?></td>
-
-            </tr>
-            <?php
-    }
-    ?>
-        </tbody>
-    </table>
-    <?php
-}
-?>
+   
     <script>
-    function resetFile() {
-        const file = document.querySelector('.file');
-        file.value = '';
-    }
+        function resetFile() {
+            const file = document.querySelector('.file');
+            file.value = '';
+        }
     </script>
+<?php include('footer.php');?>
 </body>
 
 </html>

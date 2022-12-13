@@ -17,7 +17,7 @@ include_once("db_connect.php");
 				if ($admin == 1 ){
 					$_SESSION['admin'] = $admin;
 					echo "Entrou corretamente";
-					header("location: main.php");
+					header("location: index.php");
 				}
 				else{
 					echo "Não é admin";
@@ -36,7 +36,7 @@ include_once("db_connect.php");
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Log In</title>
+    <title>PHP Password Hashing - Log In</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 </head>
 <body>
@@ -47,7 +47,7 @@ include_once("db_connect.php");
 
 				<?php if ($msg != "") echo $msg . "<br><br>"; ?>
 
-				<form method="post" action="index.php">
+				<form method="post" action="login.php">
 					<input class="form-control" name="username" type="text" placeholder="Username..."><br>
 					<input class="form-control" minlength="5" name="password" type="password" placeholder="Password..."><br>
 					<input class="btn btn-primary" name="submit" type="submit" value="Log In"><br>
