@@ -14,24 +14,14 @@ if ($_SESSION['admin'] == 0) {
 		<!DOCTYPE html>
 		<html lang="en">
 		<head>
-			<meta charset="UTF-8">
-			<meta http-equiv="X-UA-Compatible" content="IE=edge">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-html5-2.3.3/datatables.min.css"/>
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-			
-			<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>   
-		
-			<link rel="stylesheet" href="assets/css/navbar.css">
-			<link rel="stylesheet" href="assets/css/style.css"> 
-			<link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
-			
+			<?php include("header.php"); ?>
 			<title>Exportar</title>
 		</head>
 		<body>
-		<?php include('navbar.php');?>
-		
-		<section class="home">
+			<?php include("nav.php");?>
+		<div id="content" class="p-4 p-md-5 pt-5">
+
+	
 		<div class="valign-middle text-center">
         	<h1 class="import-h1">INSIRA AS DATAS</h1>
         		<div class="importar container">	
@@ -180,7 +170,7 @@ if ($_SESSION['admin'] == 0) {
 					}				
 					?>
 					<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                   <div class="modal-dialog modal-dialog-centered" role="document">
+                   	<div class="modal-dialog modal-dialog-centered" role="document">
                        <div class="modal-content">
                        <div class="modal-header">
                            <h5 class="modal-title" id="exampleModalLongTitle">Disponibilidade do nadador</h5>
@@ -189,28 +179,22 @@ if ($_SESSION['admin'] == 0) {
                            </button>
                        </div>
                        <div class="modal-body">
-					   <form action="" id="my-form" class="form-radio">
+					   <form action="" id="my-form" class="form-radio" method="POST">
 							<p>Selecione os dias em que quer que o nadador trabalhe:</p>
-						</form>
+							<div id = "container"></div>
+						
                        </div>
                        <div class="modal-footer">
-                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                           <a class="btn btn-primary" title="Apagar">Sim</a>
+                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+						   <button type="button" class="btn btn-primary" name = "enviar" id="enviar">Enviar</button>
+						   </form>
                  
                        </div>
                        </div>
                    </div>
                    </div>
-				   <script src="assets/js/navbar.js"></script>
-				<script src="assets/js/jquery-3.6.1.min.js"></script>
-				<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-html5-2.3.3/datatables.min.js"></script>
-				<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>  	  
-				<script src="assets/js/DataTables_configuration.js"></script>
-				<script src="assets/js/select2_configurations.js"></script>
-
-				<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-				<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
+				   </div>
+				<?php include("footer.php"); ?>
 									
         
 </body>

@@ -12,12 +12,21 @@ if ($_SESSION['admin'] == 0) {
 }
 
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?php include("header.php");?>
+	<title>Editar escala</title>
+</head>
+<body>
+	
+</body>
+</html>
 	<body>
-		
+		<?php include("nav.php");?>
 		<br>
-
+		<div id="content" class="p-4 p-md-5 pt-5">
 		<div class="valign-middle text-center">
-		<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
         	<h1 class="import-h1">INSIRA AS DATAS</h1>
         		<div class="importar container">	
 					<form  method="post" name="rangee">
@@ -173,13 +182,9 @@ if ($_SESSION['admin'] == 0) {
 					}
                 }				
 					?>
-					
+				</div>	
 		  
-<script src="assets/js/DataTables_configuration.js"></script>
-<script src="assets/js/select2_configurations.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>          
-
+<?php include("footer.php");?>
 
 </body>
 

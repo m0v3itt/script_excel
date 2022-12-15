@@ -37,55 +37,47 @@
 			
 			
 	});
+	
 	function updateNadadores(dia, praia, id, turno,data1,data2){
 		$.get('request.php',  { dia, praia, id, turno,data1,data2},function( data ) {
 			
 			if (data != 'false'){
-
-
-				var input = document.createElement("input");
-				$('#exampleModalCenter').on('shown.bs.modal', function (e) {
-					$radioContainer = $('<div>').attr('id', 'my-radio-container');
-					$('#my-form').append($radioContainer);
-					var x = JSON.parse(data)
-					var array=[]
-					x.forEach(dias => {
-						array.push(dias.dias)
-						for(var i = 1;i<array.length;i++){
-							var radio = $('<input>').attr('type', 'radio').attr('name', 'my-radio-group').attr('value', 'data');
-							var label = $('<label>').text(array[i]).prepend(radio)
-							console.log("a")
-							$radioContainer.append(label);
-						}
-					});
-					
-					console.log("array"+array)
-
-				  });
-				  $('#exampleModalCenter').on('hidden.bs.modal', function (e) {
-					data = null;
-				  });
-				$("#exampleModalCenter").modal('show');
-					
+				console.log("DATA " + data);
 			
-				
+					for (var value of JSON.parse(data)) {
+						var i = 0
+					$('#container')
+						.append(`<input type="checkbox" name="checkbox" id="dias"  value="${value}">`)
+					
+						.append(`<label for="${value}">${value}</label></div>`)
+						.append(`<br>`);
+					}
+					
+				$("#exampleModalCenter").modal('show');
+				$('#enviar').click(function () {
+	
+					var result = $('input[type="checkbox"]:checked');
+					if (result.length > 0) {
+						var resultString = result.length + " checkboxe(s) are checked;";
+						result.each(function () {
+							resultString += $(this).val();
+						});
+						console.log(resultString )
+						$.post('teste.php', { resultString })
+					}
+				})
+				  $('#exampleModalCenter').on('hidden.bs.modal', function (e) {
+					var container = document.getElementById("container");
+					container.replaceChildren();
+				  });
 			}
 		  })
 	}
 
 
-	// $(document).ready(function() {
-	// 	$.ajax({
-    //         type: "GET",
-    //         url: "dropDownSelecionados.php",
-    //         success: function(data) {
-    //             alert(data);
-    //         }
-    //     });
-	// });
-
 	
 
+//option selected
 
 
 								

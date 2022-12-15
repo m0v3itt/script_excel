@@ -12,12 +12,21 @@ if ($_SESSION['admin'] == 0) {
 }
 
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?php include("header.php"); ?>
+	<title>Visualizar Escala</title>
+</head>
+<body>
+	
+</body>
+</html>
 	<body>
-		<br>
-		
-
+	<?php include("nav.php"); ?>
+	<div id="content" class="p-4 p-md-5 pt-5">
 		<div class="valign-middle text-center">
-		<a href="historico.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
+
         	<h1 class="import-h1">VISÃO GERAL DA ESCALA</h1>
         		<div class="importar container">	
 				
@@ -171,9 +180,9 @@ if ($_SESSION['admin'] == 0) {
 						);
 					}
 					?>
-					
-		  
-
+				</div>
+<script src="assets/js/jquery-3.6.1.min.js"></script>
+<script src="assets/js/main.js"></script>
 <script src="assets/js/select2_configurations.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>          

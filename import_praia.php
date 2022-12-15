@@ -6,7 +6,7 @@ require_once 'DataSource.php';
 $db = new DataSource();
 $conn = $db->getConnection();
 require_once ('./vendor/autoload.php');
-include("header.php");
+
 
 if (isset($_POST["submit"])) {
     $nome_praia = $_POST['nome_praia'];
@@ -35,9 +35,19 @@ if (isset($_POST["submit"])) {
     
 }
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include("header.php");?>
+    <title>Inserir praia</title>
+</head>
 <body>
-<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
+    
+</body>
+</html>
+<body>
+<?php include("nav.php");?>
+<div id="content" class="p-4 p-md-5 pt-5">
     <div class="fullscreen table-cell valign-middle text-center">
         <h1 class="import-h1">Inserir praia</h1>
         <div class="importar container">
@@ -49,7 +59,8 @@ if (isset($_POST["submit"])) {
         </div>
     
     </div>
-
+</div>
+<?php include("footer.php");?>
 </body>
 
 </html>

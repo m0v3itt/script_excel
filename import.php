@@ -17,13 +17,13 @@ if (isset($_POST["import"])) {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ];
 
-    mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=0 ");
-    mysqli_query($conn, "TRUNCATE TABLE `tb_dias`");
+     mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=0 ");
+    //  mysqli_query($conn, "TRUNCATE TABLE `tb_dias`");
     mysqli_query($conn, "TRUNCATE TABLE `tb_nadadores`");
-    mysqli_query($conn, "TRUNCATE TABLE `tb_disponibilidade`");
-    mysqli_query($conn, "TRUNCATE TABLE `tb_escala`");
-    mysqli_query($conn, "TRUNCATE TABLE `tb_historico`");
-    mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=1 ");
+    // mysqli_query($conn, "TRUNCATE TABLE `tb_disponibilidade`");
+    // mysqli_query($conn, "TRUNCATE TABLE `tb_escala`");
+    // mysqli_query($conn, "TRUNCATE TABLE `tb_historico`");
+     mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=1 ");
 
     $flag = 0;
     if (in_array($_FILES["file"]["type"], $allowedFileType)) {
@@ -144,12 +144,12 @@ if (isset($_POST["import"])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php include('header.php');?>
+    <?php include('nav.php');?>
     <title>Importar</title>
 </head>
 <body>
-<?php include('navbar.php') ?>
-<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
+<?php include("header.php");?>
+<div id="content" class="p-4 p-md-5 pt-5">
     <div class="fullscreen table-cell valign-middle text-center">
         <h1 class="import-h1">IMPORTAR FICHEIRO</h1>
         <div class="importar container">
@@ -161,7 +161,7 @@ if (isset($_POST["import"])) {
   
     </form>
     </div>
-   
+</div>
     <script>
         function resetFile() {
             const file = document.querySelector('.file');

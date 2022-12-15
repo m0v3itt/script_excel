@@ -5,6 +5,8 @@ include_once('db_connect.php');
 
 
 
+
+
 $turno = ($_GET['praia'] % 2 == 0) ? 'Tarde' : 'Manhã';
 
 $query = "SELECT tb_nadadores.id_nadador, tb_nadadores.nome from tb_nadadores
@@ -23,5 +25,6 @@ while ($row = mysqli_fetch_assoc($resultsett))
 	}
 
 echo json_encode($results);
+
 
 ?>

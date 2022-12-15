@@ -24,8 +24,11 @@ $i=0;
 if ($db->getRecordCount($query)>1){
     
     foreach ($result as $row){
-        $resultados[$i++] = ['dias' => $row['dia']];
+        
+        array_push($resultados,$row['dia']);
+
     }
+
     echo json_encode ($resultados);
 }
 else {

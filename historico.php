@@ -1,9 +1,7 @@
 <?php
 use Phppot\DataSource;
 include_once ("db_connect.php");
-include ("header.php");
 require_once 'DataSource.php';
-include("main.php");
 $db = new DataSource();
 $conn = $db->getConnection();
 if ($_SESSION['admin'] == 0) {
@@ -12,12 +10,16 @@ if ($_SESSION['admin'] == 0) {
 	session_destroy();
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include('header.php');?>
+    <title>Histórico</title>
+</head>
 <body>
-<br>
-<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
-<br>
-<br>
-<br>
+<?php include("nav.php");?>
+<div id="content" class="p-4 p-md-5 pt-5">
+
 <table class="table table-bordered " id="tabela">
         <thead>
         <tr>
@@ -85,12 +87,7 @@ if ($_SESSION['admin'] == 0) {
         </tbody>
 
     </table>
-     
-       
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+</div>
+    <?php include("footer.php");?>
 </body>
 <html>

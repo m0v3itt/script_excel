@@ -11,10 +11,19 @@ if ($_SESSION['admin'] == 0) {
 	session_destroy();
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include("header.php") ?>
+    <title>Estatisticas</title>
+</head>
 <body>
-<a href="historico.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
-<br>
-<br>
+    
+</body>
+</html>
+<body>
+<?php include("nav.php") ?>
+<div id="content" class="p-4 p-md-5 pt-5">
     <table class="table table-bordered " id="tabela">
         <col>
         <col>
@@ -97,6 +106,8 @@ if ($_SESSION['admin'] == 0) {
             ?>
 
     </table>
+</div>
+<?php include("footer.php");?>
     <script>
     $(document).ready( function () {
         $('#tabela').DataTable( {
