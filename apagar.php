@@ -28,13 +28,13 @@ if ($_SESSION['admin'] == 0) {
             $diaDois = $row['id_dia'];
         }
 
-    $sql = "DELETE FROM tb_escala WHERE id_dia between '$diaUm' and '$diaDois'   ";
+    $sql = "DELETE FROM tb_escala WHERE id_dia between $diaUm and $diaDois   ";
     mysqli_query($conn, $sql);
 
-    $sql = "DELETE FROM tb_dias WHERE id_dia between '$diaUm' and '$diaDois'   "; 
+    $sql = "DELETE FROM tb_dias WHERE id_dia between $diaUm and $diaDois   "; 
     mysqli_query($conn, $sql);
 
-    $sql = "DELETE FROM tb_disponibilidade WHERE id_dia between '$diaUm' and '$diaDois'   "; 
+    $sql = "DELETE FROM tb_disponibilidade WHERE id_dia between $diaUm and $diaDois   "; 
     mysqli_query($conn, $sql);
 
     header("location: historico.php");

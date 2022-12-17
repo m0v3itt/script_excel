@@ -12,7 +12,7 @@
 	    download_link.href = window.URL.createObjectURL(csv_file);
 
 	    download_link.style.display = "none";
-		document_link.
+		
 	    document.body.appendChild(download_link);
 
 	    download_link.click();

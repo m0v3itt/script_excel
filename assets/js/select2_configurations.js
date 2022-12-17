@@ -40,32 +40,21 @@
 	
 	function updateNadadores(dia, praia, id, turno,data1,data2){
 		$.get('request.php',  { dia, praia, id, turno,data1,data2},function( data ) {
-			
+			console.log("DATA " + data);
 			if (data != 'false'){
-				console.log("DATA " + data);
+			
 			
 					for (var value of JSON.parse(data)) {
 						var i = 0
 					$('#container')
-						.append(`<input type="checkbox" name="checkbox" id="dias"  value="${value}">`)
+						.append(`<input type="checkbox" name="checkbox" id="dias"  value="${value}" data-id="${id}" data-turno="${turno}" data-praia="${praia}">`)
 					
 						.append(`<label for="${value}">${value}</label></div>`)
 						.append(`<br>`);
 					}
 					
 				$("#exampleModalCenter").modal('show');
-				$('#enviar').click(function () {
-	
-					var result = $('input[type="checkbox"]:checked');
-					if (result.length > 0) {
-						var resultString = result.length + " checkboxe(s) are checked;";
-						result.each(function () {
-							resultString += $(this).val();
-						});
-						console.log(resultString )
-						$.post('teste.php', { resultString })
-					}
-				})
+				
 				  $('#exampleModalCenter').on('hidden.bs.modal', function (e) {
 					var container = document.getElementById("container");
 					container.replaceChildren();
@@ -74,8 +63,35 @@
 		  })
 	}
 
-
+					$('#enviar').click(function () {
 	
+					var result = $('input[type="checkbox"]:checked');
+					if (result.length > 0) {
+						var resultString = "" 
+						var dataId
+						result.each(function () {
+							resultString += $(this).val();
+							dataId = $('#dias').attr("data-id");
+							dataTurno = $('#dias').attr("data-turno");
+							dataPraia = $('#dias').attr("data-praia");
+							
+						
+						});
+						
+						console.log(resultString + "o iddd " + dataId + dataTurno + dataPraia)
+						$.post('modal_checkbox.php', { resultString,dataId,dataTurno,dataPraia })
+						document.location.reload(true)
+					}
+				})
+				// function getData(empid, divid){
+				// 	$.ajax({
+				// 		url: 'loademployeedata.php?empid='+empid, 
+				// 		success: function(html) {
+				// 			var ajaxDisplay = document.getElementById(divid);
+				// 			ajaxDisplay.innerHTML = html;
+				// 		}
+				// 	});
+				// }
 
 //option selected
 

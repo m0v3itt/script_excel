@@ -33,12 +33,12 @@ if ($_SESSION['admin'] == 0) {
 						<?php
                         if (isset($_GET['data1']) && isset($_GET['data2'])){
 							// escolher os dias que vão aparecer na tabela
-                            $query = "SELECT * FROM tb_dias where dia = '$_GET[data1]'";
+                            $query = "SELECT * FROM tb_dias where id_dia = '$_GET[data1]'";
 							$result = $db->select($query);
                             foreach($result as $row){
                                 $diaUm = $row['id_dia'];
                             }
-                            $query = "SELECT * FROM tb_dias where dia = '$_GET[data2]'";
+                            $query = "SELECT * FROM tb_dias where id_dia = '$_GET[data2]'";
 							$result = $db->select($query);
                             foreach($result as $row){
                                 $diaDois = $row['id_dia'];
@@ -115,8 +115,8 @@ if ($_SESSION['admin'] == 0) {
 									array_push($ArrayDias, $dia);
 									$x++;	
 								}
-								$data1 = $ArrayDias[0];
-								$data2 = end($ArrayDias);
+								$data1 = $ArrayIdDias[0];
+								$data2 = end($ArrayIdDias);
 								
 							
 						 ?>
@@ -141,30 +141,33 @@ if ($_SESSION['admin'] == 0) {
 							<td><?php echo $turno; ?></td>
 							<?php for ($i = 0;$i < $x;$i++)
 							{
-								$query = "SELECT * FROM tb_escala 
-								inner join tb_nadadores on tb_escala.id_nadador=tb_nadadores.id_nadador
-								where id_dia ='$ArrayIdDias[$i]' and  id_praia = '$id_praia' and turno = '$turno'"; 
-								$result = $db->select($query);
-								
-								if ($db->getRecordCount($query)>0){
+								{
+									$query = "SELECT * FROM tb_escala 
+									inner join tb_nadadores on tb_escala.id_nadador=tb_nadadores.id_nadador
+									where id_dia ='$ArrayIdDias[$i]' and  id_praia = '$id_praia' and turno = '$turno'"; 
+									$result = $db->select($query);
 									
-									echo '<td>';
-									echo '<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px"  data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'"  multiple>';
-									foreach($result as $row){
-
-									echo '<option value=' .$row['id_nadador'].'  selected>'.$row['nome'].'</option>';
+									if ($db->getRecordCount($query)>0){
+										
+										echo '<td>';
+										echo '<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px"  data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'" data-data1="'.$data1.'" data-data2="'.$data2.'"  multiple>';
+										foreach($result as $row){
+	
+										echo '<option value=' .$row['id_nadador'].'  selected>'.$row['nome'].'</option>';
+										
+									}
+									echo '</select>';
+									}
 									
-								}
-								echo '</select>';
-								}
-								
-								else{
-								echo (
-									'<td>
-									<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px" data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'"  multiple></select>
-									<br>
-									</td>'
-									);	
+									else{
+									echo (
+										'<td>
+										<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px" data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'" data-data1="'.$data1.'" data-data2="'.$data2.'"  multiple></select>
+										<br>
+										</td>'
+										);	
+									}
+									
 								}
 								
 							}
@@ -182,6 +185,30 @@ if ($_SESSION['admin'] == 0) {
 					}
                 }				
 					?>
+					<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                   	<div class="modal-dialog modal-dialog-centered" role="document">
+                       <div class="modal-content">
+                       <div class="modal-header">
+                           <h5 class="modal-title" id="exampleModalLongTitle">Disponibilidade do nadador</h5>
+                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true">&times;</span>
+                           </button>
+                       </div>
+                       <div class="modal-body">
+					   <form action="" id="my-form" class="form-radio" method="POST">
+							<p>Selecione os dias em que quer que o nadador trabalhe:</p>
+							<div id = "container"></div>
+						
+                       </div>
+                       <div class="modal-footer">
+                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+						   <button type="button" class="btn btn-primary" name = "enviar" id="enviar">Enviar</button>
+						   </form>
+                 
+                       </div>
+                       </div>
+                   </div>
+                   </div>
 				</div>	
 		  
 <?php include("footer.php");?>

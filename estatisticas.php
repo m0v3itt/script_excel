@@ -47,12 +47,12 @@ if ($_SESSION['admin'] == 0) {
         </thead>
             <?php
             if (isset($_GET['data1']) && isset($_GET['data2'])){
-                $query = "SELECT * FROM tb_dias where dia = '$_GET[data1]'";
+                $query = "SELECT * FROM tb_dias where id_dia = '$_GET[data1]'";
                 $result = $db->select($query);
                 foreach($result as $row){
                     $diaUm = $row['id_dia'];
                 }
-                $query = "SELECT * FROM tb_dias where dia = '$_GET[data2]'";
+                $query = "SELECT * FROM tb_dias where id_dia = '$_GET[data2]'";
                 $result = $db->select($query);
                 foreach($result as $row){
                     $diaDois = $row['id_dia'];

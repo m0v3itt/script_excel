@@ -44,17 +44,16 @@ if ($_SESSION['admin'] == 0) {
 							'<table class="table table-bordered table-striped" id="example">
 								<thead>
 									<tr>
-									<th>Id</th>
-									<th>Nome Praia</th>
+									<th>Praia</th>
 									<th>Turno</th>'
 							);
 							// Selecionar os dias que vão aparecer na tabela
-								$query = "SELECT * FROM tb_dias where dia = '$_GET[data1]'";
+								$query = "SELECT * FROM tb_dias where id_dia = '$_GET[data1]'";
 								$result = $db->select($query);
 								foreach($result as $row){
 									$diaUm = $row['id_dia'];
 								}
-								$query = "SELECT * FROM tb_dias where dia = '$_GET[data2]'";
+								$query = "SELECT * FROM tb_dias where id_dia = '$_GET[data2]'";
 								$result = $db->select($query);
 								foreach($result as $row){
 									$diaDois = $row['id_dia'];
@@ -93,30 +92,28 @@ if ($_SESSION['admin'] == 0) {
 							?>
 							
 							<tr id="<?php $id_praia; ?>">
-							<td> <?php echo $id_praia; ?></td>
+							
 							<td><?php echo $nome_praia; ?> </td>
+							
 							<td><?php echo $turno; ?></td>
 							<?php for ($i = 0;$i < $x;$i++)
 							{
+								if($nome_praia != "Reserva"){
 								$query = "SELECT * FROM tb_escala 
 								inner join tb_nadadores on tb_escala.id_nadador=tb_nadadores.id_nadador
 								where id_dia ='$ArrayIdDias[$i]' and  id_praia = '$id_praia' and turno = '$turno'"; 
 								$result = $db->select($query);
-	
+							
+								echo '<td>';
+								
 								if ($db->getRecordCount($query)>0){
-									
-									echo '<td>';
-									
-									foreach($result as $row){
+								foreach($result as $row){
+								echo '('.$row['id_nadador'].')'.$row['nome']. " ";
+								}
+							    }
+								echo '</td>';
 
-									echo '('.$row['id_nadador'].')'.$row['nome']. " ";
-                                    
-									
-								}
-                                echo '</td>';
-								}
-								
-								
+							}
 								if($nome_praia == "Reserva" and $turno=="Manhã"){
 									$query = "SELECT tb_nadadores.id_nadador, tb_nadadores.nome from tb_nadadores
 									inner JOIN tb_disponibilidade on tb_nadadores.id_nadador =  tb_disponibilidade.id_nadador 
@@ -125,9 +122,10 @@ if ($_SESSION['admin'] == 0) {
 									(select tb_escala.id_nadador from tb_escala where tb_escala.id_dia = '$ArrayIdDias[$i]' and tb_escala.turno = 'Manhã')
 									order by tb_nadadores.id_nadador ASC"; 
 									$result = $db->select($query);
+									echo '<td>';
 									if ($db->getRecordCount($query)>0){
 									
-										echo '<td>';
+										
 										
 										foreach($result as $row){
 							
@@ -135,21 +133,23 @@ if ($_SESSION['admin'] == 0) {
 										
 										
 									}
-									echo '</td>';
+									
 									
 									}
+									echo '</td>';
 								}
 								if($nome_praia == "Reserva" and $turno=="Tarde"){
 									$query = "SELECT tb_nadadores.id_nadador, tb_nadadores.nome from tb_nadadores
 									inner JOIN tb_disponibilidade on tb_nadadores.id_nadador =  tb_disponibilidade.id_nadador 
-									where tb_disponibilidade.id_dia = '$ArrayIdDias[$i]' AND tb_disponibilidade.Tarde = 1 AND 
+									where tb_disponibilidade.id_dia = '$ArrayIdDias[$i]' AND tb_disponibilidade.Manhã = 1 AND 
 									tb_nadadores.id_nadador not in 
 									(select tb_escala.id_nadador from tb_escala where tb_escala.id_dia = '$ArrayIdDias[$i]' and tb_escala.turno = 'Tarde')
 									order by tb_nadadores.id_nadador ASC"; 
 									$result = $db->select($query);
+									echo '<td>';
 									if ($db->getRecordCount($query)>0){
 									
-										echo '<td>';
+										
 										
 										foreach($result as $row){
 							
@@ -157,11 +157,12 @@ if ($_SESSION['admin'] == 0) {
 										
 										
 									}
-									echo '</td>';
+									
 									
 									}
+									echo '</td>';
 								}
-								
+							
 							}
 						}
 						echo (
@@ -171,7 +172,7 @@ if ($_SESSION['admin'] == 0) {
 									
 										</form>
 										<div class="centrar-botao">
-										<a href="export_to_excel.php" class="btn btn-submit btn-importar-2" id="download-button" role="button" aria-pressed="true">Exportar</a>
+										<button class="btn btn-submit btn-importar-2" id="download-button" role="button" aria-pressed="true">Exportar</button>
 										<a href="edit.php?data1='.  $data1.'&data2='.$data2.'" class="btn btn-submit btn-importar-2"  role="button" aria-pressed="true">Editar</a>
 									
 										</div>'

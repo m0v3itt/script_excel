@@ -98,9 +98,11 @@ if ($_SESSION['admin'] == 0) {
 									$dia = $row['dia'];
 									$id_dia = $row['id_dia'];
 									array_push($ArrayIdDias, $id_dia);
+									$dia= date("m/d/Y", strtotime($row['dia']));
 									array_push($ArrayDias, $dia);
 									$x++;	
 								}
+								
 								$data1 = $ArrayIdDias[0];
 								$data2 = end($ArrayIdDias);
 								

@@ -26,7 +26,7 @@ if ($_SESSION['admin'] == 0) {
 					<form  method="post" name="rangee">
 						<?php
 							// escolher os dias que vão aparecer na tabela
-							$query = 'SELECT * FROM tb_dias ';
+							$query = 'SELECT * FROM tb_dias where estado=1';
 							$result = $db->select($query);
 							
 							echo "<select name='dia1' size='1' class='form-select form-select-sm'>";
@@ -40,7 +40,7 @@ if ($_SESSION['admin'] == 0) {
 						?> 
 							</select>
 						<?php
-							$query = 'SELECT * FROM tb_dias ';
+							$query = 'SELECT * FROM tb_dias where estado=1';
 							$result = $db->select($query);
 							echo "<select name='dia2' size='1' class='form-select form-select-sm'>";
 							echo "<option value='' disabled selected hidden> A </option>";
@@ -81,7 +81,7 @@ if ($_SESSION['admin'] == 0) {
 									$dois = $_POST['dia2'];
 									$_SESSION['dia1'] = $um;
 									$_SESSION['dia2'] = $dois;
-									$query = 'SELECT * FROM tb_dias where id_dia between ? and ? ';
+									$query = 'SELECT * FROM tb_dias where id_dia between ? and ?';
 									$paramType = 'ii';
 									$paramValue = array(
 										$um,

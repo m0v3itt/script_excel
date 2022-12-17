@@ -24,8 +24,8 @@ $i=0;
 if ($db->getRecordCount($query)>1){
     
     foreach ($result as $row){
-        
-        array_push($resultados,$row['dia']);
+        $dias = date("d/m/Y", strtotime($row['dia']));
+        array_push($resultados,$dias);
 
     }
 
