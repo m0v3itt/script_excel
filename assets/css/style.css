@@ -1,4 +1,8 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
 
 .center {
     margin: auto;
@@ -53,13 +57,13 @@ a:hover {
 
 .btn-importar,
 .btn-importar-custom {
-    font-family: sans-serif;
-    font-weight: 600;
+    font-family: sans-serif !important;
+    font-weight: 600  !important;
 }
 
 .btn-importar:hover {
-    background-color: black;
-    color: white;
+    background-color: black  !important;
+    color: white  !important;
 
 
 }
@@ -80,14 +84,14 @@ a:hover {
 .div6 {
 
     grid-area: 2 / 1 / 3 / 2;
-} */
+} 
 
-/* .import-h1{
-   position: absolute;
+ .import-h1{
+
    top: 100px;
    left: 50px;
 } */
-/* body {
+ body {
     margin: 0px;
 
 }
@@ -119,16 +123,16 @@ a:hover {
     height: 40px;
 }
 .btn-importar-2{
-    margin-left: auto !important;
+    margin-left: auto !important  ;
     margin-right: auto !important;
-    background-color: black;
-    color: white;
-    font-family: sans-serif;
-    font-weight: 600;
+    background-color: black  !important;
+    color: white  !important;
+    font-family: sans-serif  !important;
+    font-weight: 600  !important;
 
 }
 .btn-importar-2:hover{
-    color:white;
-} */
+    color:white  !important;
+} 
 
 

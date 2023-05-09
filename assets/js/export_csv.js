@@ -3,7 +3,7 @@
 	function downloadCSVFile(csv, filename) {
 	    var csv_file, download_link;
 
-	    csv_file = new Blob([ csv], { type: 'text/csv;charset=utf-8' });
+	    csv_file = new Blob([decodeURIComponent('%EF%BB%BF'),csv], { type: 'text/csv;charset=utf-8' });
 
 	    download_link = document.createElement("a");
 
@@ -12,7 +12,7 @@
 	    download_link.href = window.URL.createObjectURL(csv_file);
 
 	    download_link.style.display = "none";
-		document_link.
+		
 	    document.body.appendChild(download_link);
 
 	    download_link.click();

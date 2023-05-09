@@ -1,10 +1,10 @@
-
-	$(".multiple-select").select2({
-		maximumSelectionLength: 2,
+	// Inicialize select2 plugin
+	$(".um_nadador").select2({
+		maximumSelectionLength: 1,
   		minimumInputLength: 0,
 		ajax:{
+			
 			processResults: function (data) {
-			// Transforms the top-level key of the response object from 'items' to 'results'
 			return {
 				results: data,
       			};
@@ -12,13 +12,38 @@
 		}
 		
 	});
-	
+	$(".dois_nadadores").select2({
+		maximumSelectionLength: 2,
+  		minimumInputLength: 0,
+		ajax:{
+			
+			processResults: function (data) {
+			return {
+				results: data,
+      			};
+    		}
+		}
+		
+	});
+	$(".tres_nadadores").select2({
+		maximumSelectionLength: 3,
+  		minimumInputLength: 0,
+		ajax:{
+			
+			processResults: function (data) {
+			return {
+				results: data,
+      			};
+    		}
+		}
+		
+	});
+	// Select nadadores that will show up in the select box
 	$('.multiple-select').on('select2:select', function (e) {
 
 		var  {id, text}  = e.params.data;
 		var { dia, praia, turno, data1,data2} = e.currentTarget.dataset
-
-		console.log(dia, praia, turno, data1,data2)
+		// When a nadadores is selected, send it to database
 		$.post('data.php', { dia, praia, id, turno, data1,data2 })
 			.done(() => updateNadadores(dia, praia, id, turno,data1,data2))
 			.fail(function() {
@@ -27,7 +52,7 @@
 		})
 
 	
-
+	// Same logic above but to remove
 	$('.multiple-select').on('select2:unselect', function (remove) {
 		var  {id}  = remove.params.data;
 		
@@ -37,60 +62,70 @@
 			
 			
 	});
-	function updateNadadores(dia, praia, id, turno,data1,data2){
+	// Create a modal when a nadador has more than 2 days of disponibility
+	function updateNadadores(dia, praia, id, turno,data1,data2) {
 		$.get('request.php',  { dia, praia, id, turno,data1,data2},function( data ) {
-			
+			$.get('checked.php',  { dia, praia, id, turno,data1,data2},function( checked ) {    
+				console.warn(checked)                          
 			if (data != 'false'){
-
-				// var container = document.getElementById("my-form");
-				var input = document.createElement("input");
-				// input.type = "radio";
-				// input.name = "member";
-				// container.appendChild(input);
-				// var inputLabel = document.createElement("label");
-				// inputLabel.for = "member"
-				// inputLabel = "oal"
-				// var modal = $(this)
-				// modal.find('.modal-title').text('New message to ' + recipient)
-				// modal.find('.modal-body input').val(recipient)^
-				$('#exampleModalCenter').on('shown.bs.modal', function (e) {
-					$radioContainer = $('<div>').attr('id', 'my-radio-container');
-					$('#my-form').append($radioContainer);
-					var x = JSON.parse(data)
-					x.forEach(dias => {
-						console.log(dias)
+					for (var value of JSON.parse(data)) {
+						var input = ""
+						for (var day of JSON.parse(checked)) {
 						
-						var radio = $('<input>').attr('type', 'radio').attr('name', 'my-radio-group').attr('value', 'data');
-						var label = $('<label>').text(dias.dias).prepend(radio)
-						$radioContainer.append(label);
-						
-					});
-				  });
-				  $('#exampleModalCenter').on('hidden.bs.modal', function (e) {
-					data = null;
-				  });
-				$("#exampleModalCenter").modal('show');
+						if (value.toString()==day.toString()){
 					
-			
-				
-			}
-		  })
+							input = `<input type="checkbox" name="checkbox" id="dias"  value="${value}" data-id="${id}" data-turno="${turno}" data-praia="${praia}" checked>`;
+						}
+						}
+
+						if (input==""){
+							input = `<input type="checkbox" name="checkbox" id="dias"  value="${value}" data-id="${id}" data-turno="${turno}" data-praia="${praia}">`;
+						}
+
+						$('#container')
+						.append(input)
+						.append(`<label for="${value}">${value}</label></div>`)
+						.append(`<br>`);
+					
+					}
+					$('#container')
+						.append(`<input type="checkbox" name="checkbox" id="select-all"  >`)
+						.append(`<label >   Selecionar todos </label></div>`)
+						.append(`<br>`);
+						$( '#container #select-all' ).click( function () {
+							$( '#container input[type="checkbox"]' ).prop('checked', this.checked)
+						  })
+					$("#exampleModalCenter").modal('show');
+		
+				    $('#exampleModalCenter').on('hidden.bs.modal', function (e) {
+						var container = document.getElementById("container");
+						container.replaceChildren();
+				 	});
+					}
+				});
+		})             
 	}
-
-
-	// $(document).ready(function() {
-	// 	$.ajax({
-    //         type: "GET",
-    //         url: "dropDownSelecionados.php",
-    //         success: function(data) {
-    //             alert(data);
-    //         }
-    //     });
-	// });
-
 	
+	$('#enviar').click(function () {
 
-
-
-								
-								
+	var result = $('input[type="checkbox"]:checked');
+	if (result.length > 0) {
+		var resultString = "" 
+		var dataId
+		result.each(function () {
+			resultString += $(this).val();
+			dataId = $('#dias').attr("data-id");
+			dataTurno = $('#dias').attr("data-turno");
+			dataPraia = $('#dias').attr("data-praia");
+		});
+		console.log(resultString,dataId,dataTurno,dataPraia)
+		
+		$.post('modal_checkbox.php', { resultString,dataId,dataTurno,dataPraia })
+	
+		document.location.reload(true)
+		
+	
+	}
+	})
+	
+				
