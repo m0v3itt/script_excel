@@ -27,6 +27,7 @@ $db = new DataSource();
 
 			$msg = "Registo completo!";
 		}
+		header('location: index.php');
 	}
 ?>
 <!doctype html>
@@ -52,6 +53,7 @@ $db = new DataSource();
 					<input class="form-control" minlength="5" name="password" type="password" placeholder="Password..."><br>
 					<input class="form-control" minlength="5" name="cPassword" type="password" placeholder="Confirm Password..."><br>
 					<input class="btn btn-primary" name="submit" type="submit" value="Register..."><br>
+					
 				</form>
 
 			</div>

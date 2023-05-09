@@ -14,13 +14,14 @@ if ($_SESSION['admin'] == 0) {
 		<!DOCTYPE html>
 		<html lang="en">
 		<head>
-			<?php include('header.php'); ?>
+			<?php include("header.php"); ?>
 			<title>Exportar</title>
 		</head>
 		<body>
-		<?php include('navbar.php');?>
-		
-		<section class="home">
+			<?php include("nav.php");?>
+		<div id="content" class="p-4 p-md-5 pt-5">
+
+	
 		<div class="valign-middle text-center">
         	<h1 class="import-h1">INSIRA AS DATAS</h1>
         		<div class="importar container">	
@@ -66,12 +67,16 @@ if ($_SESSION['admin'] == 0) {
 					{
 						
 						echo ( 
-							'<table class="table table-bordered table-striped" id="example">
+							
+						'<div style="overflow-x:auto;">
+							<table class="table table-bordered table-striped " id="example">
 								<thead>
 									<tr>
 									<th>Id</th>
 									<th>Nome Praia</th>
-									<th>Turno</th>'
+									<th>Turno</th>
+									'
+									
 							);
 							// Selecionar os dias que vão aparecer na tabela
 								if (isset($_POST["submeter"]))
@@ -97,9 +102,11 @@ if ($_SESSION['admin'] == 0) {
 									$dia = $row['dia'];
 									$id_dia = $row['id_dia'];
 									array_push($ArrayIdDias, $id_dia);
+									$dia= date("m/d/Y", strtotime($row['dia']));
 									array_push($ArrayDias, $dia);
 									$x++;	
 								}
+								
 								$data1 = $ArrayIdDias[0];
 								$data2 = end($ArrayIdDias);
 								
@@ -117,6 +124,7 @@ if ($_SESSION['admin'] == 0) {
 							$id_praia = $row['id_praia'];
 							$nome_praia = $row['nome_praia'];
 							$turno = $row['turno'];
+							$nr_nadadores = $row['nr_nadadores'];
 						
 							?>
 							
@@ -124,8 +132,23 @@ if ($_SESSION['admin'] == 0) {
 							<td> <?php echo $id_praia; ?></td>
 							<td><?php echo $nome_praia; ?> </td>
 							<td><?php echo $turno; ?></td>
+						
 							<?php for ($i = 0;$i < $x;$i++)
-							{
+							{	
+								$texto_select = '<select name="nadadores[]" size="1" class="form-select multiple-select um_nadador" style="width:185px"  
+								data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'"
+								data-dia="'.$ArrayIdDias[$i].'" data-data1="'.$data1.'" data-data2="'.$data2.'"  multiple>' ;
+								if ($nr_nadadores==2){
+									$texto_select = '<select name="nadadores[]" size="1" class="form-select multiple-select dois_nadadores" style="width:185px"  
+								data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'"
+								data-dia="'.$ArrayIdDias[$i].'" data-data1="'.$data1.'" data-data2="'.$data2.'"  multiple>' ;
+								}
+								if ($nr_nadadores==3){
+									$texto_select = '<select name="nadadores[]" size="1" class="form-select multiple-select tres_nadadores" style="width:185px"  
+								data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'"
+								data-dia="'.$ArrayIdDias[$i].'" data-data1="'.$data1.'" data-data2="'.$data2.'"  multiple>' ;
+								}
+
 								$query = "SELECT * FROM tb_escala 
 								inner join tb_nadadores on tb_escala.id_nadador=tb_nadadores.id_nadador
 								where id_dia ='$ArrayIdDias[$i]' and  id_praia = '$id_praia' and turno = '$turno'"; 
@@ -134,22 +157,20 @@ if ($_SESSION['admin'] == 0) {
 								if ($db->getRecordCount($query)>0){
 									
 									echo '<td>';
-									echo '<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px"  data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'" data-data1="'.$data1.'" data-data2="'.$data2.'"  multiple>';
+									echo $texto_select;
 									foreach($result as $row){
 
-									echo '<option value=' .$row['id_nadador'].'  selected>'.$row['nome'].'</option>';
+									echo '<option value=' .$row['id_nadador'].'  selected>'."(".$row['id_nadador'].")".$row['nome'].'</option>';
 									
 								}
 								echo '</select>';
 								}
 								
 								else{
-								echo (
-									'<td>
-									<select name="nadadores[]" size="1" class="form-select multiple-select" style="width:185px" data-ajax--url="Dropdown.php?dia='.$ArrayIdDias[$i].'&turno='.$turno.'&praia='.$id_praia.'" data-turno = "'.$turno.'" data-praia="'.$id_praia.'" data-dia="'.$ArrayIdDias[$i].'" data-data1="'.$data1.'" data-data2="'.$data2.'"  multiple></select>
-									<br>
-									</td>'
-									);	
+									echo '<td>';
+									echo $texto_select;
+									echo '<br>';
+									echo '</td>';
 								}
 								
 							}
@@ -158,9 +179,10 @@ if ($_SESSION['admin'] == 0) {
 							'</tr>
 							</tbody>
 								</table>
+								</div>
 										</form>
 											<div class="centrar-botao">
-											<a href="visualizar.php?data1='. $data1 .'&data2='.$data2.'" class="btn btn-submit btn-importar-2" role="button" aria-pressed="true">Exportar</a>
+											<a href="visualizar.php?data1='. $data1 .'&data2='.$data2.'" class="btn btn-submit btn-importar-2" role="button" aria-pressed="true">Visualizar</a>
 
 											</div>
 											</section>'
@@ -169,7 +191,7 @@ if ($_SESSION['admin'] == 0) {
 					}				
 					?>
 					<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                   <div class="modal-dialog modal-dialog-centered" role="document">
+                   	<div class="modal-dialog modal-dialog-centered" role="document">
                        <div class="modal-content">
                        <div class="modal-header">
                            <h5 class="modal-title" id="exampleModalLongTitle">Disponibilidade do nadador</h5>
@@ -178,20 +200,33 @@ if ($_SESSION['admin'] == 0) {
                            </button>
                        </div>
                        <div class="modal-body">
-					   <form action="" id="my-form" class="form-radio">
+					   <form action="" id="my-form" class="form-radio" method="POST">
 							<p>Selecione os dias em que quer que o nadador trabalhe:</p>
-						</form>
+							<div id = "container"></div>
+						
                        </div>
                        <div class="modal-footer">
-                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                           <a class="btn btn-primary" title="Apagar">Sim</a>
+                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+						   <button type="button" class="btn btn-primary" name = "enviar" id="enviar">Enviar</button>
+						   </form>
                  
                        </div>
                        </div>
                    </div>
                    </div>
-					<?php include('footer.php');?>
-					
+				   </div>
+				<?php include("footer.php"); ?>
+				<script>
+				document.addEventListener("DOMContentLoaded", function(event) { 
+				var scrollpos = localStorage.getItem('scrollpos');
+				if (scrollpos) window.scrollTo(0, scrollpos);
+				});
+
+				window.onbeforeunload = function(e) {
+					localStorage.setItem('scrollpos', window.scrollY);
+				};
+				</script>		
+				   		
         
 </body>
 

@@ -1,7 +1,6 @@
 <?php
 use Phppot\DataSource;
 include_once ("db_connect.php");
-include ("header.php");
 require_once 'DataSource.php';
 $db = new DataSource();
 $conn = $db->getConnection();
@@ -12,39 +11,44 @@ if ($_SESSION['admin'] == 0) {
 }
 
 ?>
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<?php include('header.php');?>
+		<title>Preferências</title>
+	</head>
 	<body>
-		
-		<br>
-
+		<?php include("nav.php") ?>
+		<div id="content" class="p-4 p-md-5 pt-5">
 		<div class="valign-middle text-center">
-		<a href="main.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
         	<h1 class="import-h1">INSIRA AS DATAS</h1>
         		<div class="importar container">	
 					<form  method="post" name="rangee">
 						<?php
 							// escolher os dias que vão aparecer na tabela
-							$query = 'SELECT * FROM tb_dias ';
+							$query = 'SELECT * FROM tb_dias where estado=1';
 							$result = $db->select($query);
 							
 							echo "<select name='dia1' size='1' class='form-select form-select-sm'>";
 							echo "<option value='' disabled selected hidden> De </option>";
 							foreach($result as $row){
-								echo $row['dia'];
-								$dia1 = $row['dia'];
+								$dia1= date("d/m/Y", strtotime($row['dia']));
+							
 								$id1 = $row['id_dia'];
 								echo "<option value=$id1>$dia1</option>";
 							}
 						?> 
 							</select>
 						<?php
-							$query = 'SELECT * FROM tb_dias ';
+							$query = 'SELECT * FROM tb_dias where estado=1';
 							$result = $db->select($query);
 							echo "<select name='dia2' size='1' class='form-select form-select-sm'>";
 							echo "<option value='' disabled selected hidden> A </option>";
 							foreach($result as $row)
 							{
-								$dia2 = $row['dia'];
+								$dia2= date("d/m/Y", strtotime($row['dia']));
 								$id2 = $row['id_dia'];
+
 								echo "<option value=$id2>$dia2</option>";
 							}
 
@@ -63,7 +67,8 @@ if ($_SESSION['admin'] == 0) {
 					{
 						
 						echo ( 
-							'<table class="table table-bordered table-striped" id="example">
+						'<div style="overflow-x:auto;">
+							<table class="table table-bordered table-striped" id="example">
 								<thead>
 									<tr>
 									<th>Id</th>
@@ -78,7 +83,7 @@ if ($_SESSION['admin'] == 0) {
 									$dois = $_POST['dia2'];
 									$_SESSION['dia1'] = $um;
 									$_SESSION['dia2'] = $dois;
-									$query = 'SELECT * FROM tb_dias where id_dia between ? and ? ';
+									$query = 'SELECT * FROM tb_dias where id_dia between ? and ?';
 									$paramType = 'ii';
 									$paramValue = array(
 										$um,
@@ -154,14 +159,9 @@ if ($_SESSION['admin'] == 0) {
 
 									
 					?>
-					
-		  
-<script src="assets/js/DataTables_configuration.js"></script>
-<script src="assets/js/select2_configurations.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>          
-
-
+					</table>
+					</div>
+			<?php include("footer.php");?>
 </body>
 
 </html>

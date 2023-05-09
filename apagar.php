@@ -12,7 +12,7 @@ if ($_SESSION['admin'] == 0) {
 }
 
     if (isset($_GET['data1']) && isset($_GET['data2'])){
-
+       
         $sql = "DELETE FROM tb_historico WHERE data1='$_GET[data1]' and data2='$_GET[data2]'   ";
         mysqli_query($conn, $sql);
       
@@ -27,16 +27,18 @@ if ($_SESSION['admin'] == 0) {
         foreach($result as $row){
             $diaDois = $row['id_dia'];
         }
-
-    $sql = "DELETE FROM tb_escala WHERE id_dia between '$diaUm' and '$diaDois'   ";
+        mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=0 ");
+     
+       
+    $sql = "DELETE FROM tb_escala WHERE id_dia between $diaUm and $diaDois   ";
     mysqli_query($conn, $sql);
 
-    $sql = "DELETE FROM tb_dias WHERE id_dia between '$diaUm' and '$diaDois'   "; 
+    $sql = "DELETE FROM tb_dias WHERE id_dia between $diaUm and $diaDois   "; 
     mysqli_query($conn, $sql);
 
-    $sql = "DELETE FROM tb_disponibilidade WHERE id_dia between '$diaUm' and '$diaDois'   "; 
+    $sql = "DELETE FROM tb_disponibilidade WHERE id_dia between $diaUm and $diaDois   "; 
     mysqli_query($conn, $sql);
-
+    mysqli_query($conn, "SET FOREIGN_KEY_CHECKS=1 ");
     header("location: historico.php");
 
     }

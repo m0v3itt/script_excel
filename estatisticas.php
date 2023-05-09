@@ -1,7 +1,6 @@
 <?php
 use Phppot\DataSource;
 include_once ("db_connect.php");
-include ("header.php");
 require_once 'DataSource.php';
 $db = new DataSource();
 $conn = $db->getConnection();
@@ -11,10 +10,19 @@ if ($_SESSION['admin'] == 0) {
 	session_destroy();
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include("header.php") ?>
+    <title>Estatisticas</title>
+</head>
 <body>
-<a href="historico.php"><img src="return.png" style="width:50px; height:50px; position:absolute;left:2px"></img></a>
-<br>
-<br>
+    
+</body>
+</html>
+<body>
+<?php include("nav.php") ?>
+<div id="content" class="p-4 p-md-5 pt-5">
     <table class="table table-bordered " id="tabela">
         <col>
         <col>
@@ -38,12 +46,12 @@ if ($_SESSION['admin'] == 0) {
         </thead>
             <?php
             if (isset($_GET['data1']) && isset($_GET['data2'])){
-                $query = "SELECT * FROM tb_dias where dia = '$_GET[data1]'";
+                $query = "SELECT * FROM tb_dias where id_dia = '$_GET[data1]'";
                 $result = $db->select($query);
                 foreach($result as $row){
                     $diaUm = $row['id_dia'];
                 }
-                $query = "SELECT * FROM tb_dias where dia = '$_GET[data2]'";
+                $query = "SELECT * FROM tb_dias where id_dia = '$_GET[data2]'";
                 $result = $db->select($query);
                 foreach($result as $row){
                     $diaDois = $row['id_dia'];
@@ -97,14 +105,26 @@ if ($_SESSION['admin'] == 0) {
             ?>
 
     </table>
+</div>
+<?php include("footer.php");?>
     <script>
-    $(document).ready( function () {
-        $('#tabela').DataTable( {
-            dom: 'Bfrtip',
-            buttons: ['excel'],
+  
+
+
+    $(document).ready(function () {
+    $('#tabela').DataTable({
+        "language": {
+        "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Portuguese.json"
+        },
+        dom: 'flBrtip',
+            buttons: [
+            'excel'
+        ],
             className: 'btn btn-default btn-sm'
-        } );
-    } );
+        } 
+        );
+        
+    });
 
 </script>
 </body>

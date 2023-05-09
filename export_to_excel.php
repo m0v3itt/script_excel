@@ -1,6 +1,5 @@
 <?php
 use Phppot\DataSource;
-include_once ("db_connect.php");
 include ("header.php");
 require_once 'DataSource.php';
 $db = new DataSource();

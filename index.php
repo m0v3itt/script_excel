@@ -17,7 +17,7 @@ include_once("db_connect.php");
 				if ($admin == 1 ){
 					$_SESSION['admin'] = $admin;
 					echo "Entrou corretamente";
-					header("location: main.php");
+					header("location:historico.php");
 				}
 				else{
 					echo "Não é admin";
@@ -28,6 +28,8 @@ include_once("db_connect.php");
         } else
             $msg = "Os dados estão errados!";
 	}
+
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -38,6 +40,8 @@ include_once("db_connect.php");
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Log In</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+	<link rel="stylesheet" href="assets/css/style.css"> 
+
 </head>
 <body>
 	<div class="container" style="margin-top: 100px;">
@@ -50,7 +54,7 @@ include_once("db_connect.php");
 				<form method="post" action="index.php">
 					<input class="form-control" name="username" type="text" placeholder="Username..."><br>
 					<input class="form-control" minlength="5" name="password" type="password" placeholder="Password..."><br>
-					<input class="btn btn-primary" name="submit" type="submit" value="Log In"><br>
+					<input class="btn btn-submit btn-importar-2" name="submit" type="submit" value="Login"><br>
 				</form>
 
 			</div>
